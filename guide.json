@@ -1,0 +1,596 @@
+{
+ "id": "laboration-1",
+ "title": "Laboration 1",
+ "course": "",
+ "meta": "",
+ "authors": "",
+ "chapters": [
+  {
+   "id": "forutsattningar-for-laborationen",
+   "title": "Förutsättningar för laborationen",
+   "intro": [
+    "<p>Du behöver tillgång till miljön som ligger under X:\\Course-specific\\Systemhanterande serversystem\\Labbmiljö.</p>"
+   ],
+   "parts": []
+  },
+  {
+   "id": "laborationen-innehaller-foljande-delar",
+   "title": "Laborationen innehåller följande delar:",
+   "intro": [
+    "<ul><li>Kontroller SQL server</li><li>Bekanta dig med Configuration Manager</li><li>Undersök site- och hierarchy konfiguration</li><li>Skapa en boundary och boundary group</li><li>Importera användare, datorer, AD site och grupper från Active Directory</li><li>Installera en Distribution Point (DP)</li></ul>"
+   ],
+   "parts": []
+  },
+  {
+   "id": "rapport",
+   "title": "Rapport",
+   "intro": [
+    "<p>I denna laboration förekommer det fem G-uppgifter och två VG-uppgifter som ska besvaras. Samtliga frågor finns samlade i slutet av laborationen.</p>",
+    "<p>Det finns sammanlagt fyra laborationer (1, 2, 3 och 4) med uppgifter. Uppgifterna är indelade i G- och VG-nivå, och du väljer själv vilket betyg du vill sikta mot. Om svar på någon uppgift saknas vid kursens slut behöver rapporten kompletteras innan den kan godkännas. För att erhålla betyget VG krävs dessutom att samtliga VG-uppgifter är besvarade.</p>",
+    "<p>Rapporten lämnas in i slutet av kursen.</p>"
+   ],
+   "parts": []
+  },
+  {
+   "id": "laborationsmiljons-uppbyggnad",
+   "title": "Laborationsmiljöns uppbyggnad",
+   "intro": [
+    "<p>IP-adresserna</p>",
+    "<figure class=\"table\"><div class=\"table-scroll\"><table><tbody><tr><td>CM</td><td>192.168.1.10 /24</td></tr><tr><td>DHCP-spann</td><td>192.168.1.100 – 254 /24</td></tr></tbody></table></div></figure>",
+    "<p>Klientdatorerna får IP-adress ifrån DHCP-server.</p>",
+    "<p><strong>Tjänster på Configuration Manager</strong></p>",
+    "<figure class=\"table\"><div class=\"table-scroll\"><table><tbody><tr><td>DC</td><td>Domänkontrollanten som håller i skogen och domänen.</td></tr><tr><td>CM</td><td>Configuration Manager har uppgifterna: OS utrullning, Applikationsutrullning, Applikations uppdatering och Windows Uppdateringar, Virusskyddet (skjuter ut virusklienten och policy) och andra klientpolicy som strömhantering, inventering, rapporter och så vidare.</td></tr><tr><td>WDS/ PXE Responder</td><td>Är den tjänst som har hand om utrullningen av operativsystemet.</td></tr><tr><td>DHCP</td><td>Arbetar tillsammans med WDS:en/ PXE Responder för att kunna peka på korrekt utrullningsserver.</td></tr><tr><td>IIS</td><td>Microsoft Webbserver som ger CM http-protokollet.</td></tr></tbody></table></div></figure>"
+   ],
+   "parts": []
+  },
+  {
+   "id": "guide",
+   "title": "Konfigurationsmoment",
+   "intro": [],
+   "parts": [
+    {
+     "id": "kontrollera-sql-server-innan-uppstart-av-configuration-manager",
+     "title": "Kontrollera SQL server innan uppstart av Configuration Manager",
+     "intro": [
+      "<p>Innan du startar Configuration Manager bör du kontrollera att Microsoft SQL Server är i gång och fungerar korrekt.</p>"
+     ],
+     "groups": [
+      {
+       "heading": "Konfiguration",
+       "steps": [
+        {
+         "id": "kontrollera-sql-server-innan-uppstart-av-configuration-manager-f6c5c1",
+         "html": "<p>Starta Server Manager om programmet inte redan är öppet.</p>\n"
+        },
+        {
+         "id": "kontrollera-sql-server-innan-uppstart-av-configuration-manager-8e0785",
+         "html": "<p>Välj Local Server i menyn till vänster.</p>\n"
+        },
+        {
+         "id": "kontrollera-sql-server-innan-uppstart-av-configuration-manager-a489aa",
+         "html": "<p>Scrolla ned till avsnittet Services och klicka på länken för att öppna tjänstehanteringen.</p>\n"
+        },
+        {
+         "id": "kontrollera-sql-server-innan-uppstart-av-configuration-manager-823657",
+         "html": "<p>Skriv sql i sökrutan för att filtrera tjänsterna.</p>\n"
+        },
+        {
+         "id": "kontrollera-sql-server-innan-uppstart-av-configuration-manager-e14823",
+         "html": "<p>Leta upp tjänsten SQL Server (MSSQLSERVER) i listan.</p>\n"
+        },
+        {
+         "id": "kontrollera-sql-server-innan-uppstart-av-configuration-manager-1a88bf",
+         "html": "<p>Kontrollera att tjänstens status är Running.</p>\n"
+        }
+       ]
+      },
+      {
+       "heading": "Om tjänsten inte är startad",
+       "steps": [
+        {
+         "id": "kontrollera-sql-server-innan-uppstart-av-configuration-manager-81aae3",
+         "html": "<p>Högerklicka på SQL Server (MSSQLSERVER).</p>\n"
+        },
+        {
+         "id": "kontrollera-sql-server-innan-uppstart-av-configuration-manager-5f3156",
+         "html": "<p>Välj Start.</p>\n"
+        },
+        {
+         "id": "kontrollera-sql-server-innan-uppstart-av-configuration-manager-7aefe6",
+         "html": "<p>Vänta tills statusen ändras till Running.</p>\n<figure class=\"figure\"><img src=\"media/bild01.png\" alt=\"\" loading=\"lazy\"></figure>"
+        },
+        {
+         "id": "kontrollera-sql-server-innan-uppstart-av-configuration-manager-68634f",
+         "html": "<p>Om SQL Server-tjänsten (MSSQLSERVER) är i gång kan du starta Configuration Manager-konsolen.</p>\n"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "lara-dig-hitta-i-konsolen-for-configuration-manager",
+     "title": "Lära dig hitta i konsolen för Configuration Manager",
+     "intro": [
+      "<p>Det kan vara viktigt att kontrollera om det redan finns några användare eller enheter registrerade i Configuration Managers databas. Det är dessa objekt som används som mål när olika inställningar konfigureras och när programvara eller andra resurser distribueras till klienterna.</p>",
+      "<p>Configuration Manager-konsolen är uppbyggd med två navigeringsnivåer: en yttre kategori (huvudkategori) och en inre kategori (underkategori). Huvudkategorin används för att navigera mellan de olika funktionsområdena, medan underkategorin innehåller de objekt och inställningar som hör till respektive område.</p>",
+      "<figure class=\"figure\"><img src=\"media/bild02.png\" alt=\"\" loading=\"lazy\"></figure>",
+      "<p>För godkänd-delen krävs endast korta svar på uppgiften. Tänk bara på att svara fullständigt på frågan.</p>",
+      "<p>Uppgift 1A</p>",
+      "<p>Vad händer om du försöker starta Configuration Manager-konsolen när databasen inte är i gång? Beskriv vad som sker och illustrera svaret med lämpliga figur/skärmbild.</p>",
+      "<p>Uppgift 1B</p>",
+      "<p>Vilka tjänster i Component Status hade statusen Critical respektive Warning? Gick det att återställa dem? Beskriv hur du gick till väga och illustrera svaret med lämpliga figur/skärmbild.</p>",
+      "<p>Uppgift 1C</p>",
+      "<p>Hur går du till väga för att hämta objekt från containern hkr.se\\Computers? Beskriv processen steg för steg och illustrera svaret med lämpliga figur/skärmbild.</p>",
+      "<p>Uppgift 1D</p>",
+      "<p>Hur gör du om du i stället vill ange en sökväg direkt till en OU (Organizational Unit), på samma sätt som vid AD Users Discovery eller AD Computer Discovery? Beskriv tillvägagångssättet och illustrera svaret med lämpliga figur/skärmbild.</p>",
+      "<p>Uppgift 1E</p>",
+      "<p>Hur konfigurerar du sökningen för att genomsöka hela domänen i stället för enbart en specifik OU? Beskriv tillvägagångssättet och komplettera svaret med en figur eller skärmbild.</p>",
+      "<aside class=\"note\"><p><strong>Notera: Miljö kommer att användas under hela kursen och ska därför sparas efter varje gång.</strong></p></aside>"
+     ],
+     "groups": [
+      {
+       "heading": "Konfiguration",
+       "steps": [
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-5b612f",
+         "html": "<p>Kontrollera först att du befinner dig under Assets and Compliance.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-70f824",
+         "html": "<p>Gå därefter till Users. Du kommer troligtvis att se att listan är tom. Detta kommer vi att åtgärda senare i laborationen.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-029711",
+         "html": "<p>Gå sedan till Devices. Där finns det redan ett antal objekt som skapats som en del av grundinstallationen. Bland annat kommer du att se objekt relaterade till Configuration Manager (CM), men även andra objekt som vi har diskuterat under föreläsningen.</p>\n"
+        }
+       ]
+      },
+      {
+       "heading": "Nu ska du hitta Software Library/ Operating Systems",
+       "steps": [
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-8fb243",
+         "html": "<p>Navigera till Software Library och expandera sedan noden Operating Systems.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-6a019b",
+         "html": "<p>Studera innehållet under Operating Systems och notera de olika kategorier som används för operativsystemsutrullning.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-d295a3",
+         "html": "<p>Här hittar du bland annat funktioner för att hantera operativsystemsavbildningar, drivrutiner, startavbildningar och aktivitetssekvenser som används vid installation och utrullning av operativsystem.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-d8c1e6",
+         "html": "<p>Bekanta dig med de olika kategorierna, eftersom de utgör grunden för Configuration Managers funktioner för operativsystemsdistribution.</p>\n<p>Nu ska du bekanta dig med övervakningsdelen i Configuration Manager, närmare bestämt den del som övervakar de tjänster och komponenter som används av Configuration Manager. Det är här du kan få en överblick över systemets hälsostatus. Om problem uppstår beror det ofta på att en eller flera komponenter inte fungerar som de ska, vilket kan identifieras i denna vy.</p>"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-aa0aa4",
+         "html": "<p>Navigera till Monitoring och expandera sedan System Status.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-5500f7",
+         "html": "<p>Välj Component Status.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-0ac66a",
+         "html": "<p>Använd sökrutan för att söka efter komponenten SMS_MP_CONTROL_MANAGER.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-df7c24",
+         "html": "<p>Om komponenten visas med röd status indikerar det ett fel. Efter en återställning bör statusen förändras till grön om problemet har åtgärdats.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-7c670c",
+         "html": "<p>Om den röda statusen återkommer efter en tid bör orsaken undersökas närmare, eftersom det kan tyda på ett underliggande problem som behöver en lösning.</p>\n<p>Nästa steg är att undersöka Site Configuration och kontrollera vilka roller som redan finns installerade i Configuration Manager.</p>"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-ec8fda",
+         "html": "<p>Navigera till Administration och expandera därefter Site Configuration.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-a27b7d",
+         "html": "<p>Välj Servers and Site System Roles.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-1b81d3",
+         "html": "<p>Markera servern \\CM.hkr.se i listan.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-15de62",
+         "html": "<p>I den nedre delen av fönstret visas de roller som redan är installerade och konfigurerade på servern.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-715cc7",
+         "html": "<p>Studera vilka roller som finns och fundera över deras funktion i Configuration Manager-miljön.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-0c2a5e",
+         "html": "<p>Notera särskilt att rollen Component Server finns med bland de installerade rollerna.</p>\n<p>Dessa roller utgör de olika funktioner som Configuration Manager använder för att kunna hantera klienter, distribuera programvara, genomföra operativsystemsutrullningar och utföra andra administrativa uppgifter. Det är därför viktigt att känna till vilka roller som finns installerade och vilken funktion de har i miljön.</p>\n<p>Nu ska du gå vidare till Hierarchy Configuration, där de övergripande inställningarna för Configuration Manager hanteras.</p>"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-c4e837",
+         "html": "<p>Från samma huvudkategori (Administration) klickar du på Hierarchy Configuration.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-2e2ff0",
+         "html": "<p>Undersök de olika alternativen och inställningarna som finns tillgängliga.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-27ec84",
+         "html": "<p>Notera vilka konfigurationsområden som ingår och fundera över vilken funktion de kan ha i den övergripande Configuration Manager-miljön.</p>\n<p>Hierarchy Configuration innehåller inställningar som påverkar hela Configuration Manager-miljön och används för att konfigurera centrala funktioner och beteenden. Det är därför viktigt att få en överblick över vilka konfigurationsmöjligheter som finns tillgängliga här.</p>\n<p>Nu ska du skapa en boundary, vilket används för att definiera vilka nätverk eller platser som får kommunicera med Configuration Manager. Om en boundary saknas eller är felaktigt konfigurerad kommer klienternas anrop till Configuration Manager att ignoreras. I denna laboration ska du skapa en boundary baserad på en Active Directory Site.</p>"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-d26b4e",
+         "html": "<p>För att kunna skapa en boundary måste det finnas en Active Directory Site. Du kan vid behov kontrollera detta i verktyget Active Directory Sites and Services, som finns tillgängligt via Server Manager.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-0d2ca1",
+         "html": "<p>Navigera därefter till Boundaries.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-6d7c97",
+         "html": "<p>Högerklicka i den tomma ytan till höger och välj Create Boundary.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-7f45d2",
+         "html": "<p>Ange ett valfritt namn, exempelvis AD site.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-77e1da",
+         "html": "<p>Klicka på rullistan Type. Här finns flera alternativ, bland annat IP Subnet, Active Directory Site, IPv6 Prefix, IP Address Range och VPN.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-d04305",
+         "html": "<p>Välj Active Directory site.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-b23826",
+         "html": "<p>Klicka därefter på Browse och välj den Active Directory Site som finns i miljön. Den bör heta Kristinastad.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-0a91bb",
+         "html": "<p>Slutför skapandet genom att klicka på OK.</p>\n<p>När din boundary har skapats kan Configuration Manager använda informationen för att identifiera vilka klienter som tillhör den aktuella platsen och därmed tillåta kommunikation mellan klienterna och Configuration Manager-miljön.</p>\n<figure class=\"figure\"><img src=\"media/bild03.png\" alt=\"\" loading=\"lazy\"></figure>\n<p>Nu ska du lägga till din Boundary i en Boundary Group. Även om det bara finns en enda boundary måste den vara medlem i en boundary group. Det är i boundary-gruppen som ytterligare information konfigureras, exempelvis vilken Configuration Manager site som ansvarar för klienterna och vilken site klienterna ska tillhöra för att kunna kommunicera med Configuration Manager.</p>"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-9d51fe",
+         "html": "<p>Navigera till kategorin Boundary Groups.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-c4b191",
+         "html": "<p>Notera att det redan finns en grupp med namnet Default-Site-Boundary Group. Denna ska inte användas i laborationen. Gruppen fungerar främst som en säkerhetsmekanism och kräver ytterligare konfiguration för att fungera korrekt.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-352f1d",
+         "html": "<p>Högerklicka i den tomma ytan och välj Create Boundary group.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-122e5a",
+         "html": "<p>Ange ett valfritt namn, exempelvis Boundary group.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-213843",
+         "html": "<p>Lägg därefter till den boundary som du skapade i föregående steg.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-e3753d",
+         "html": "<p>Byt sedan till nästa flik i konfigurationsfönstret.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-73fc12",
+         "html": "<p>Markera alternativet för att använda denna site för tilldelning av Configuration Manager-klienter.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-70f4c8",
+         "html": "<p>Lägg därefter till CM som ansvarig site för miljön.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-54961e",
+         "html": "<p>Slutför konfigurationen genom att spara inställningarna.</p>\n<p>När denna konfiguration är klar kan klienter inom den definierade din boundary kommunicera med din Configuration Manager-miljö. För närvarande finns det dock inga klienter registrerade i miljön. Anledningen till detta kommer vi att gå igenom i ett senare moment av laborationen.</p>\n<figure class=\"figure\"><img src=\"media/bild04.png\" alt=\"\" loading=\"lazy\"></figure>\n<p>Nu ska du hämta in användare till Configuration Manager. Användare kan användas för flera olika ändamål, exempelvis för att tilldela administrativa rättigheter i Configuration Manager eller för att styra vilka användare som ska få specifika inställningar och distributioner.</p>"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-d6d81a",
+         "html": "<p>Navigera till kategorin Discovery Methods.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-9c7f11",
+         "html": "<p>Här finns flera olika metoder för att upptäcka och importera objekt till Configuration Manager, såsom användare, datorer eller grupper.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-9bb709",
+         "html": "<p>Om du vill läsa mer om de olika metoderna kan du följa länken nedan: https://learn.microsoft.com/en-us/intune/configmgr/core/servers/deploy/configure/about-discovery-methods</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-81e2fe",
+         "html": "<p>Högerklicka på Active Directory User Discovery och välj Properties.</p>\n<p>Active Directory User Discovery används för att söka efter och importera användarkonton från Active Directory till Configuration Manager-databasen. De importerade användarna kan sedan användas för administration, samlingar (Collections), programdistributioner och andra Configuration Manager-funktioner.</p>\n<figure class=\"figure\"><img src=\"media/bild05.png\" alt=\"\" loading=\"lazy\"></figure>"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-64363c",
+         "html": "<p>Klicka på stjärnikonen för att lägga till den sökväg där Configuration Manager ska söka efter användare.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-83cbb4",
+         "html": "<p>I fältet Path klickar du på Browse.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-5bfc40",
+         "html": "<p>Navigera till hkr.se → HKR → Users och välj denna sökväg.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-a4aae4",
+         "html": "<p>Bekräfta valet genom att klicka på OK.</p>\n<figure class=\"figure\"><img src=\"media/bild06.png\" alt=\"\" loading=\"lazy\"></figure>"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-d07153",
+         "html": "<p>Klicka därefter på OK. Övriga inställningar kan lämnas med standardvärden.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-74607f",
+         "html": "<p>Markera sedan alternativet Enable Active Directory User Discovery för att aktivera metoden.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-3266d1",
+         "html": "<p>När du klickar på OK visas en fråga om du vill köra upptäckten omedelbart. Välj Ja för att starta sökningen direkt.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-87c79a",
+         "html": "<p>När sökningen har slutförts kan du navigera till Assets and Compliance → Users för att kontrollera att användarna har hämtats in till Configuration Manager.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-95225d",
+         "html": "<p>Observera att det kan förekomma en viss fördröjning innan resultaten visas. Om listan inte uppdateras direkt kan du byta till en annan kategori och sedan tillbaka igen för att uppdatera vyn.<br>(Om det inte syns direkt kan du fortsätta med nästa steg och komma tillbaka och kontrollera senare).</p>\n"
+        }
+       ]
+      },
+      {
+       "heading": "Nu ska du även konfigurera upptäckt av datorer (Devices).",
+       "steps": [
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-57846d",
+         "html": "<p>Navigera tillbaka till Administration → Overview → Hierarchy Configuration → Discovery Methods.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-d3856f",
+         "html": "<p>Välj den här gången Active Directory System Discovery.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-84b9d8",
+         "html": "<p>Klicka på stjärnikonen för att lägga till den sökväg där Configuration Manager ska söka efter datorobjekt.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-f055f5",
+         "html": "<p>Ange sökvägen LDAP://OU=Computers,OU=HKR,DC=hkr,DC=se.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-59b11a",
+         "html": "<p>Klicka därefter på OK och aktivera metoden genom att markera Enable Active Directory System Discovery.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-b29309",
+         "html": "<p>Välj att köra upptäckten direkt när du får frågan.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-3af20f",
+         "html": "<p>Observera att inga datorobjekt kommer att hittas om organisationsenheten (OU) är tom. Öppna därför Active Directory Users and Computers och kontrollera om det finns några datorobjekt i OU=Computers,OU=HKR,DC=hkr,DC=se.</p>\n<p>När upptäckten har slutförts kan du navigera till Assets and Compliance → Devices för att kontrollera om några datorer har importerats till Configuration Manager. Om listan inte uppdateras direkt kan du byta till en annan kategori och sedan tillbaka för att uppdatera vyn.</p>\n<p>Nu ska du importera platsinformation (site-konfigurationer) direkt från Active Directory Sites and Services, på samma sätt som du tidigare har hämtat in användar- och datorobjekt. <em>De boundaries som upptäcks automatiskt behöver normalt placeras i lämpliga Boundary Groups.</em></p>"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-5b97a3",
+         "html": "<p>Börja med att skapa några extra &quot;test-&quot; eller &quot;fiktiva&quot; siter i Active Directory Sites and Services.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-9be9c0",
+         "html": "<p>Kontrollera att varje site har ett eget tillhörande subnät och att subnäten inte överlappar varandra.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-94b4a9",
+         "html": "<p>Gå därefter tillbaka till Discovery Methods och öppna Properties för Active Directory Forest Discovery.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-c9f1a5",
+         "html": "<p>Aktivera metoden genom att markera Enable Active Directory Forest Discovery.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-a0079f",
+         "html": "<p>Markera de tillgängliga kryssrutorna och studera deras funktion. Notera särskilt vad de olika alternativen gör samt hur ofta upptäckten är schemalagd att köras.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-d715b5",
+         "html": "<p>Klicka på OK och välj att köra upptäckten direkt när du får frågan.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-60caa1",
+         "html": "<p>När upptäckten har slutförts navigerar du till Boundaries.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-4587e7",
+         "html": "<p>Om de nya objekten inte visas direkt kan du uppdatera vyn genom att växla till en annan kategori och sedan tillbaka igen.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-c527c9",
+         "html": "<p>Du bör nu kunna se de nya Active Directory-siterna som har identifierats och importerats.</p>\n<p>Om du behöver köra en Discovery Method på nytt markerar du den aktuella metoden och väljer Run Discovery Now för att starta en ny upptäckt manuellt.</p>\n<figure class=\"figure\"><img src=\"media/bild07.png\" alt=\"\" loading=\"lazy\"></figure>\n<p>Nu ska du även hämta in gruppmedlemskap från Active Directory. Metoden importerar både säkerhetsgruppen och de användare som är medlemmar i gruppen, oavsett var i Active Directory-hierarkin användarkontona är placerade.</p>"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-e64fe4",
+         "html": "<p>Öppna Properties för Active Directory Group Discovery.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-691f9f",
+         "html": "<p>Klicka på Add. Notera att det finns två sätt att lägga till grupper:</p>\n<ul><li>Groups: används för att välja en specifik grupp.</li><li>Location: används för att ange en sökväg till en container eller organisationsenhet (OU).</li></ul>"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-d42a59",
+         "html": "<p>Välj Groups.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-ebef5b",
+         "html": "<p>Ange ett valfritt namn, exempelvis Group.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-d52428",
+         "html": "<p>Klicka på Browse.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-f4a32f",
+         "html": "<p>Sök efter gruppen Domain Admins och lägg till den.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-884906",
+         "html": "<p>Klicka på OK för att spara inställningen.</p>\n<p>Innan du fortsätter ska du skapa en testanvändare för att verifiera att sökningen fungerar korrekt.</p>"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-c8e7f0",
+         "html": "<p>Öppna Active Directory Users and Computers.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-3935b3",
+         "html": "<p>Skapa en ny användare på en valfri plats, exempelvis hkr.se → HKR → Users.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-b3869a",
+         "html": "<p>Lägg till den nya användaren i gruppen Domain Admins.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-e16765",
+         "html": "<p>Kontrollera att användaren faktiskt har lagts till som medlem i gruppen.</p>\n"
+        }
+       ]
+      },
+      {
+       "heading": "När detta är klart",
+       "steps": [
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-d70c34",
+         "html": "<p>Gå tillbaka till Active Directory Group Discovery Properties.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-2b422c",
+         "html": "<p>Aktivera metoden genom att markera Enable Active Directory Group Discovery.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-a1112a",
+         "html": "<p>Klicka på OK och välj att köra upptäckten direkt om du får frågan.</p>\n<p>När upptäckten har genomförts:</p>"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-4d8f22",
+         "html": "<p>Navigera till Assets and Compliance → Overview → Users.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-a7eff7",
+         "html": "<p>Kontrollera att den nya användaren har importerats till Configuration Manager.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-848089",
+         "html": "<p>Om användaren inte visas direkt kan du uppdatera vyn genom att växla till en annan kategori och sedan tillbaka igen.</p>\n<p>Genom att använda Active Directory Group Discovery kan Configuration Manager identifiera både grupper och deras medlemmar, vilket förenklar administrationen av samlingar (Collections), behörigheter och distributioner baserade på gruppmedlemskap.</p>\n<p>Den sista delen i denna laboration är att lägga till en ny Distribution Point (DP) i Configuration Manager-miljön. En Distribution Point används för att distribuera programvara, operativsystem och annat innehåll till klienterna. Den används även för att tillhandahålla olika typer av konfigurationer och installationsfiler.</p>"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-f48166",
+         "html": "<p>Börja med att skapa en länkad klon av Master2019.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-2ea27e",
+         "html": "<p>Tilldela den nya servern en IP-adress, ange ett datornamn (exempelvis NewDP) och anslut den till domänen.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-5fcfc7",
+         "html": "<p>Inaktivera även Windows-brandväggen på servern.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-ef6baf",
+         "html": "<p>Gå därefter tillbaka till Configuration Manager och navigera till Administration → Overview → Site Configuration → Servers and Site System Roles.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-7da1c8",
+         "html": "<p>Högerklicka i den tomma ytan och välj Create Site System Server.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-9fc8b2",
+         "html": "<p>När guiden öppnas klickar du på Browse och söker efter den nya servern (NewDP).</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-ee90ac",
+         "html": "<p>Kontrollera att Site Code HKR – University är valt.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-71dd0b",
+         "html": "<p>Lägg därefter till ett domänkonto genom att välja New Account. Detta konto används av Configuration Manager för att kommunicera med den nya servern och måste därför ha administrativa rättigheter på servern.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-b5bfde",
+         "html": "<p>Använd kontot administrator@hkr.se och ange lösenordet Passw0rd.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-645f0b",
+         "html": "<p>Klicka på Next tills du kommer till steget där du ska välja vilken roll servern ska ha.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-a1be58",
+         "html": "<p>Välj rollen Distribution Point.</p>\n<p>När rollen har installerats kommer servern att kunna lagra och distribuera innehåll till klienter i Configuration Manager-miljön. Detta är en central komponent för programdistribution, operativsystemsutrullning och annan innehållshantering i Configuration Manager.</p>\n<figure class=\"figure\"><img src=\"media/bild08.png\" alt=\"\" loading=\"lazy\"></figure>"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-a644bf",
+         "html": "<p>Klicka på Next. I nästa steg markerar du alternativet Install and configure IIS if required by Configuration Manager.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-017cda",
+         "html": "<p>Klicka på Next igen.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-c22f29",
+         "html": "<p>I nästa fönster väljer du att Distribution Point ska använda HTTPS för kommunikationen och fortsätter sedan genom guiden genom att klicka på Next tills installationen är klar.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-c22b89",
+         "html": "<p>Klicka slutligen på Close för att stänga guiden.</p>\n"
+        }
+       ]
+      },
+      {
+       "heading": "När installationen är slutförd bör den nya servern visas i listan över servrar under Servers and Site System Roles.",
+       "steps": [
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-90427b",
+         "html": "<p>Markera servern för att verifiera att den har lagts till korrekt.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-f8922e",
+         "html": "<p>I den nedre delen av fönstret kan du se vilka roller som har installerats på servern.</p>\n"
+        },
+        {
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-2db88a",
+         "html": "<p>Kontrollera att rollen Distribution Point finns med i listan.</p>\n<p>Den nya Distribution Point-servern är nu integrerad i Configuration Manager-miljön och kan användas för att distribuera programvara, operativsystem och annat innehåll till klienterna.</p>"
+        }
+       ]
+      },
+      {
+       "heading": "Godkänt uppgifter",
+       "steps": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "val-godkant-uppgifter",
+   "title": "Väl godkänt uppgifter",
+   "intro": [
+    "<p>För Väl godkänt-delen-kärvs utförliga, välmotiverade och reflekterande svar på samtliga frågor.</p>",
+    "<p>Uppgift 1F</p>",
+    "<p>Skapa en ny site i Active Directory Sites and Services och lägg även till den som en boundary i Configuration Manager. Du kan exempelvis ge siten namnet NewSite.</p>",
+    "<p>Skapa därefter ett nytt subnät (subnet) för siten. Använd ett annat nätverksintervall än det som redan används i din miljö för att undvika konflikter och störningar.</p>",
+    "<p>Redovisa följande:</p>",
+    "<p>Beskriv hur du skapade den nya siten, subnätet och boundaryn.</p>",
+    "<p>Komplettera beskrivningen med en figur/skärmbild som visar momentet.</p>",
+    "<p>Besvara även följande frågor:</p>",
+    "<p>Vad behöver du som administratör göra för att klientdatorer ska anslutas till den nya Configuration Manager-siten?</p>",
+    "<p>Krävs det att det finns en domänkontrollant på den nya siten? Motivera ditt svar.</p>",
+    "<p>Uppgift 1G</p>",
+    "<p>Hur kan du verifiera att den nya siten och boundary fungerar som avsett?</p>",
+    "<p>Beskriv vilka kontroller du genomförde för att verifiera att konfigurationen fungerar korrekt.</p>",
+    "<p>Finns det loggfiler som kan användas för att säkerställa att klienten har identifierat och anslutit till rätt site och boundary? Beskriv vilka loggfiler du granskade, hur du analyserade dem och vilka resultat de visade.</p>",
+    "<p>Redovisa dina observationer, resultat och slutsatser samt reflektera över hur dessa bekräftar att konfigurationen fungerar som avsett.</p>",
+    "<p>Använd figur/skärmbild för att tydligt visa hur du genomförde verifieringen och vilket resultat du fick.</p>"
+   ],
+   "parts": []
+  }
+ ]
+}
