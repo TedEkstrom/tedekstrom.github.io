@@ -203,9 +203,9 @@
 
   function renderCourses() {
     document.title = "Kurser";
-    app.append(el("h1", "", "Kurser"), el("p", "sub", "Välj en kurs för att se dess labbar."));
+    //app.append(el("h1", "", "Kurser"), el("p", "sub", "Välj en kurs för att se dess labbar."));
     const names = admin ? Object.keys(tree).sort(collator.compare) : visibleCourses();
-    if (!names.length) { app.appendChild(el("p", "status", "Inget att visa just nu. Har du fått en länk med nyckel? Öppna den länken.")); return; }
+    //if (!names.length) { app.appendChild(el("p", "status", "Inget att visa just nu. Har du fått en länk med nyckel? Öppna den länken.")); return; }
     const ul = el("ul");
     for (const name of names) {
       const n = visibleLabs(name).length;
