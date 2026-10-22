@@ -40,12 +40,13 @@
   .controls { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; align-items: center;
     padding: .4rem .25rem 0; font-size: .9rem; color: var(--muted); }
   .controls label { display: inline-flex; align-items: center; gap: .4rem; }
-  input[type=date], input[type=password] { font: inherit; color: var(--text); background: var(--surface);
+  input[type=date], input[type=password], input[type=text] { font: inherit; color: var(--text); background: var(--surface);
     border: 1px solid var(--line); border-radius: 6px; padding: .3rem .5rem; }
   input[type=password] { width: 100%; padding: .6rem .75rem; }
   button { font: inherit; cursor: pointer; border-radius: 8px; padding: .5rem 1rem; border: 1px solid var(--line);
     background: var(--surface); color: var(--text); }
   button.primary { background: var(--accent); color: var(--accent-text); border-color: var(--accent); font-weight: 600; }
+  button.small { padding: .15rem .55rem; font-size: .85rem; }
   button:disabled { opacity: .5; cursor: default; }
   .adminbar { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin-bottom: 1.75rem;
     padding: .75rem 1rem; background: var(--accent-bg); border: 1px solid var(--accent); border-radius: 10px; }
@@ -73,7 +74,7 @@
   const collator = new Intl.Collator("sv", { numeric: true, sensitivity: "base" });
   const TOKEN_KEY = "labbToken";
 
-  let info = null, tree = null, settings = {}, sha = null;
+  let info = null, tree = null, settings = {}, sha = null, viewerHashes = new Set();
   let admin = false, dirty = false, saving = false, statusMsg = "", statusErr = false;
 
   /* ---------- hjälpfunktioner ---------- */
@@ -82,6 +83,17 @@
   const today = () => new Date().toLocaleDateString("sv-SE"); // ÅÅÅÅ-MM-DD
   const b64enc = s => { let b = ""; new TextEncoder().encode(s).forEach(c => b += String.fromCharCode(c)); return btoa(b); };
   const b64dec = s => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\s/g, "")), c => c.charCodeAt(0)));
+
+  async function sha256hex(str) {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  async function readKeys() {
+    const raw = new URLSearchParams(location.search).get("nyckel") || "";
+    const codes = raw.split(",").map(x => x.trim()).filter(Boolean);
+    try { viewerHashes = new Set(await Promise.all(codes.map(sha256hex))); } catch { viewerHashes = new Set(); }
+  }
 
   function el(tag, className, text) {
     const e = document.createElement(tag);
@@ -114,15 +126,19 @@
 
   /* ---------- synlighet ---------- */
   const entry = (course, key) => (settings[course] && settings[course][key]) || {};
-  const entryVisible = s => !s.dolj && !(s.visa && s.visa > today());
-  const labVisible = (course, lab) => entryVisible(entry(course, "_kurs")) && entryVisible(entry(course, lab));
+  const entryVisible = (s, ignoreKey) =>
+    !s.dolj && !(s.visa && s.visa > today()) && (ignoreKey || !s.nyckel || viewerHashes.has(s.nyckel));
+  const labVisible = (course, lab, ignoreKey) =>
+    entryVisible(entry(course, "_kurs"), ignoreKey) && entryVisible(entry(course, lab), ignoreKey);
   const visibleLabs = course => admin ? tree[course] : tree[course].filter(l => labVisible(course, l));
   const visibleCourses = () => Object.keys(tree).filter(c => visibleLabs(c).length > 0).sort(collator.compare);
 
   function statusText(s) {
-    if (s.dolj) return "Dold";
-    if (s.visa && s.visa > today()) return "Visas från " + s.visa;
-    return "";
+    const parts = [];
+    if (s.dolj) parts.push("Dold");
+    if (s.visa && s.visa > today()) parts.push("Visas från " + s.visa);
+    if (s.nyckel) parts.push("Kräver nyckel");
+    return parts.join(", ");
   }
 
   /* ---------- rendering ---------- */
@@ -133,7 +149,7 @@
     li.appendChild(a);
     if (admin) {
       const s = key === "_kurs" ? entry(course, "_kurs") : entry(course, key);
-      const hiddenNow = key === "_kurs" ? !entryVisible(s) : !labVisible(course, key);
+      const hiddenNow = key === "_kurs" ? !entryVisible(s, true) : !labVisible(course, key, true);
       if (hiddenNow) li.classList.add("is-hidden");
       li.appendChild(controls(course, key, s));
     }
@@ -153,7 +169,21 @@
     const l2 = el("label"); const d = el("input"); d.type = "date"; d.value = s.visa || "";
     d.addEventListener("change", () => update({ visa: d.value }));
     l2.append("Visa från", d);
-    wrap.append(l1, l2);
+    const l3 = el("span");
+    if (s.nyckel) {
+      const rm = el("button", "small", "Ta bort"); rm.type = "button";
+      rm.addEventListener("click", () => update({ nyckel: "" }));
+      l3.append("Nyckel " + s.nyckel.slice(0, 8) + "… ", rm);
+    } else {
+      const k = el("input"); k.type = "text"; k.size = 22; k.autocomplete = "off";
+      k.placeholder = "Nyckel (hash eller kod)"; k.setAttribute("aria-label", "Nyckel");
+      k.addEventListener("change", async () => {
+        const v = k.value.trim(); if (!v) return;
+        update({ nyckel: /^[0-9a-f]{64}$/i.test(v) ? v.toLowerCase() : await sha256hex(v) });
+      });
+      l3.appendChild(k);
+    }
+    wrap.append(l1, l2, l3);
     const st = statusText(s);
     if (st) wrap.appendChild(el("span", "", "· " + st));
     return wrap;
@@ -175,7 +205,7 @@
     document.title = "Kurser";
     app.append(el("h1", "", "Kurser"), el("p", "sub", "Välj en kurs för att se dess labbar."));
     const names = admin ? Object.keys(tree).sort(collator.compare) : visibleCourses();
-    if (!names.length) { app.appendChild(el("p", "status", "Inga kurser att visa just nu.")); return; }
+    if (!names.length) { app.appendChild(el("p", "status", "Inget att visa just nu. Har du fått en länk med nyckel? Öppna den länken.")); return; }
     const ul = el("ul");
     for (const name of names) {
       const n = visibleLabs(name).length;
@@ -263,7 +293,8 @@
     for (const c of Object.keys(settings)) {
       for (const k of Object.keys(settings[c])) {
         const s = settings[c][k];
-        if (!s.dolj && !s.visa) delete settings[c][k]; else if (!s.dolj) delete s.dolj;
+        for (const f of ["dolj", "visa", "nyckel"]) if (!s[f]) delete s[f];
+        if (!Object.keys(s).length) delete settings[c][k];
       }
       if (!Object.keys(settings[c]).length) delete settings[c];
     }
@@ -330,6 +361,7 @@
       }
       for (const c in found) found[c].sort(collator.compare);
       tree = found;
+      await readKeys();
       await loadSettings();
       render();
     } catch (err) {
