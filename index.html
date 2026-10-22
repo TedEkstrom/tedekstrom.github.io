@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kurser och labbar</title>
+<style>
+  :root {
+    --bg: #f6f7f4; --surface: #ffffff; --text: #1d2420; --muted: #66706a;
+    --line: #d9ddd6; --accent: #1f6f5c; --accent-bg: #e6f2ee; --accent-text: #ffffff; --danger: #c0492f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #151a17; --surface: #1d2420; --text: #e8ece8; --muted: #96a09a;
+      --line: #2f3833; --accent: #6cc4aa; --accent-bg: #23312c; --accent-text: #10201a; --danger: #e5826b;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.5; }
+  main { max-width: 640px; margin: 0 auto; padding: 3rem 1.25rem 3rem; }
+  h1 { font-size: 2rem; margin: 0 0 .25rem; letter-spacing: -0.02em; overflow-wrap: anywhere; }
+  .sub { color: var(--muted); margin: 0 0 2rem; }
+  .back { display: inline-block; margin-bottom: 1.25rem; color: var(--accent); text-decoration: none; font-weight: 600; }
+  .back:hover { text-decoration: underline; }
+  a:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .6rem; }
+  a.item { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+    padding: 1rem 1.15rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    color: inherit; text-decoration: none; transition: border-color .15s, background .15s; }
+  a.item:hover { border-color: var(--accent); background: var(--accent-bg); }
+  .name { font-size: 1.1rem; font-weight: 600; overflow-wrap: anywhere; }
+  .meta { color: var(--muted); font-size: .9rem; white-space: nowrap; }
+  .path { font-family: ui-monospace, Menlo, Consolas, monospace; }
+  .status { color: var(--muted); }
+  .error { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--danger);
+    border-radius: 6px; padding: 1rem 1.15rem; }
+  .error p { margin: .25rem 0; }
+  li.is-hidden a.item { opacity: .55; }
+  .controls { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; align-items: center;
+    padding: .4rem .25rem 0; font-size: .9rem; color: var(--muted); }
+  .controls label { display: inline-flex; align-items: center; gap: .4rem; }
+  input[type=date], input[type=password], input[type=text] { font: inherit; color: var(--text); background: var(--surface);
+    border: 1px solid var(--line); border-radius: 6px; padding: .3rem .5rem; }
+  input[type=password] { width: 100%; padding: .6rem .75rem; }
+  button { font: inherit; cursor: pointer; border-radius: 8px; padding: .5rem 1rem; border: 1px solid var(--line);
+    background: var(--surface); color: var(--text); }
+  button.primary { background: var(--accent); color: var(--accent-text); border-color: var(--accent); font-weight: 600; }
+  button.small { padding: .15rem .55rem; font-size: .85rem; }
+  button:disabled { opacity: .5; cursor: default; }
+  .adminbar { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin-bottom: 1.75rem;
+    padding: .75rem 1rem; background: var(--accent-bg); border: 1px solid var(--accent); border-radius: 10px; }
+  .adminbar strong { margin-right: auto; }
+  .adminbar .msg { width: 100%; font-size: .9rem; }
+  .adminbar .msg.err { color: var(--danger); }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 1.25rem; }
+  .panel ol { padding-left: 1.2rem; color: var(--muted); font-size: .95rem; }
+  .panel p.hint { color: var(--muted); font-size: .9rem; }
+  footer { margin-top: 3rem; font-size: .85rem; }
+  footer a { color: var(--muted); }
+  @media (max-width: 460px) { a.item { flex-direction: column; gap: .1rem; } }
+</style>
+</head>
+<body>
+<main id="app"><p class="status">Hämtar kurser …</p></main>
+
+<script>
+  /* Struktur i repot: Kursmapp/labbmapp/index.html
+     Synlighet sparas i labbar.json i roten av repot (skapas av adminläget).
+     Owner/repo läses från adressen; fyll i manuellt bara vid egen domän. */
+  const CONFIG = { owner: "", repo: "", exclude: [] };
+
+  const app = document.getElementById("app");
+  const collator = new Intl.Collator("sv", { numeric: true, sensitivity: "base" });
+  const TOKEN_KEY = "labbToken";
+
+  let info = null, tree = null, settings = {}, sha = null, viewerHashes = new Set();
+  let admin = false, dirty = false, saving = false, statusMsg = "", statusErr = false;
+
+  /* ---------- hjälpfunktioner ---------- */
+  function getToken() { try { return sessionStorage.getItem(TOKEN_KEY) || ""; } catch { return ""; } }
+  function setToken(t) { try { t ? sessionStorage.setItem(TOKEN_KEY, t) : sessionStorage.removeItem(TOKEN_KEY); } catch {} }
+  const today = () => new Date().toLocaleDateString("sv-SE"); // ÅÅÅÅ-MM-DD
+  const b64enc = s => { let b = ""; new TextEncoder().encode(s).forEach(c => b += String.fromCharCode(c)); return btoa(b); };
+  const b64dec = s => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\s/g, "")), c => c.charCodeAt(0)));
+
+  async function sha256hex(str) {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  async function readKeys() {
+    const raw = new URLSearchParams(location.search).get("nyckel") || "";
+    const codes = raw.split(",").map(x => x.trim()).filter(Boolean);
+    try { viewerHashes = new Set(await Promise.all(codes.map(sha256hex))); } catch { viewerHashes = new Set(); }
+  }
+
+  function el(tag, className, text) {
+    const e = document.createElement(tag);
+    if (className) e.className = className;
+    if (text !== undefined) e.textContent = text;
+    return e;
+  }
+
+  function detectRepo() {
+    if (CONFIG.owner && CONFIG.repo) return { owner: CONFIG.owner, repo: CONFIG.repo };
+    const host = location.hostname;
+    if (!host.endsWith(".github.io")) return null;
+    const first = location.pathname.split("/").filter(Boolean)[0];
+    return { owner: host.replace(".github.io", ""), repo: first && !first.endsWith(".html") ? first : host };
+  }
+
+  function api(path, opts = {}, token) {
+    const t = token ?? (admin ? getToken() : "");
+    const headers = { Accept: "application/vnd.github+json", ...(opts.headers || {}) };
+    if (t) headers.Authorization = "Bearer " + t;
+    return fetch(`https://api.github.com/repos/${info.owner}/${info.repo}/${path}`, { ...opts, headers });
+  }
+
+  function showError(title, hint) {
+    const box = el("div", "error");
+    const p = el("p"); p.appendChild(el("strong", "", title));
+    box.append(p, el("p", "", hint));
+    app.replaceChildren(box);
+  }
+
+  /* ---------- synlighet ---------- */
+  const entry = (course, key) => (settings[course] && settings[course][key]) || {};
+  const entryVisible = (s, ignoreKey) =>
+    !s.dolj && !(s.visa && s.visa > today()) && (ignoreKey || !s.nyckel || viewerHashes.has(s.nyckel));
+  const labVisible = (course, lab, ignoreKey) =>
+    entryVisible(entry(course, "_kurs"), ignoreKey) && entryVisible(entry(course, lab), ignoreKey);
+  const visibleLabs = course => admin ? tree[course] : tree[course].filter(l => labVisible(course, l));
+  const visibleCourses = () => Object.keys(tree).filter(c => visibleLabs(c).length > 0).sort(collator.compare);
+
+  function statusText(s) {
+    const parts = [];
+    if (s.dolj) parts.push("Dold");
+    if (s.visa && s.visa > today()) parts.push("Visas från " + s.visa);
+    if (s.nyckel) parts.push("Kräver nyckel");
+    return parts.join(", ");
+  }
+
+  /* ---------- rendering ---------- */
+  function itemRow(href, name, metaText, metaClass, course, key) {
+    const li = el("li");
+    const a = el("a", "item"); a.href = href;
+    a.append(el("span", "name", name), el("span", "meta " + (metaClass || ""), metaText));
+    li.appendChild(a);
+    if (admin) {
+      const s = key === "_kurs" ? entry(course, "_kurs") : entry(course, key);
+      const hiddenNow = key === "_kurs" ? !entryVisible(s, true) : !labVisible(course, key, true);
+      if (hiddenNow) li.classList.add("is-hidden");
+      li.appendChild(controls(course, key, s));
+    }
+    return li;
+  }
+
+  function controls(course, key, s) {
+    const wrap = el("div", "controls");
+    const update = patch => {
+      settings[course] = settings[course] || {};
+      settings[course][key] = { ...entry(course, key), ...patch };
+      dirty = true; statusMsg = ""; render(false);
+    };
+    const l1 = el("label"); const cb = el("input"); cb.type = "checkbox"; cb.checked = !!s.dolj;
+    cb.addEventListener("change", () => update({ dolj: cb.checked }));
+    l1.append(cb, "Dold");
+    const l2 = el("label"); const d = el("input"); d.type = "date"; d.value = s.visa || "";
+    d.addEventListener("change", () => update({ visa: d.value }));
+    l2.append("Visa från", d);
+    const l3 = el("span");
+    if (s.nyckel) {
+      const rm = el("button", "small", "Ta bort"); rm.type = "button";
+      rm.addEventListener("click", () => update({ nyckel: "" }));
+      l3.append("Nyckel " + s.nyckel.slice(0, 8) + "… ", rm);
+    } else {
+      const k = el("input"); k.type = "text"; k.size = 22; k.autocomplete = "off";
+      k.placeholder = "Nyckel (hash eller kod)"; k.setAttribute("aria-label", "Nyckel");
+      k.addEventListener("change", async () => {
+        const v = k.value.trim(); if (!v) return;
+        update({ nyckel: /^[0-9a-f]{64}$/i.test(v) ? v.toLowerCase() : await sha256hex(v) });
+      });
+      l3.appendChild(k);
+    }
+    wrap.append(l1, l2, l3);
+    const st = statusText(s);
+    if (st) wrap.appendChild(el("span", "", "· " + st));
+    return wrap;
+  }
+
+  function adminBar() {
+    const bar = el("div", "adminbar");
+    const save = el("button", "primary", saving ? "Sparar …" : "Spara ändringar");
+    save.disabled = !dirty || saving;
+    save.addEventListener("click", saveSettings);
+    const out = el("button", "", "Logga ut");
+    out.addEventListener("click", logout);
+    bar.append(el("strong", "", "Adminläge"), save, out);
+    if (statusMsg) bar.appendChild(el("span", "msg" + (statusErr ? " err" : ""), statusMsg));
+    return bar;
+  }
+
+  function renderCourses() {
+    document.title = "Kurser";
+    app.append(el("h1", "", "Kurser"), el("p", "sub", "Välj en kurs för att se dess labbar."));
+    const names = admin ? Object.keys(tree).sort(collator.compare) : visibleCourses();
+    if (!names.length) { app.appendChild(el("p", "status", "Inget att visa just nu. Har du fått en länk med nyckel? Öppna den länken.")); return; }
+    const ul = el("ul");
+    for (const name of names) {
+      const n = visibleLabs(name).length;
+      ul.appendChild(itemRow("#" + encodeURIComponent(name), name, n + (n === 1 ? " labb" : " labbar"), "", name, "_kurs"));
+    }
+    app.appendChild(ul);
+  }
+
+  function renderLabs(course) {
+    const back = el("a", "back", "← Alla kurser"); back.href = "#";
+    const ok = tree[course] && (admin || visibleCourses().includes(course));
+    if (!ok) {
+      app.append(back, el("h1", "", "Kursen hittades inte"),
+        el("p", "sub", "Det finns ingen tillgänglig kurs med namnet ”" + course + "”."));
+      return;
+    }
+    document.title = course;
+    app.append(back, el("h1", "", course), el("p", "sub", "Välj en labb för att öppna den."));
+    const ul = el("ul");
+    for (const lab of visibleLabs(course)) {
+      const href = encodeURIComponent(course) + "/" + encodeURIComponent(lab) + "/index.html";
+      ul.appendChild(itemRow(href, lab, lab + "/index.html", "path", course, lab));
+    }
+    app.appendChild(ul);
+  }
+
+  function renderLogin() {
+    const back = el("a", "back", "← Tillbaka"); back.href = "#";
+    app.append(back, el("h1", "", "Admin"));
+    const panel = el("div", "panel");
+    const ol = el("ol");
+    const steps = [
+      "Gå till GitHub → Settings → Developer settings → Fine-grained personal access tokens → Generate new token.",
+      "Välj bara detta repo (" + info.owner + "/" + info.repo + ") och ge Contents: Read and write.",
+      "Sätt ett kort utgångsdatum, kopiera token och klistra in den här."
+    ];
+    steps.forEach(t => ol.appendChild(el("li", "", t)));
+    const form = el("form");
+    const input = el("input"); input.type = "password"; input.placeholder = "github_pat_…";
+    input.autocomplete = "off"; input.setAttribute("aria-label", "GitHub-token");
+    const btn = el("button", "primary", "Logga in"); btn.type = "submit"; btn.style.marginTop = ".75rem";
+    const msg = el("p", "hint");
+    form.append(input, btn, msg);
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      const token = input.value.trim();
+      if (!token) return;
+      btn.disabled = true; msg.textContent = "Kontrollerar …";
+      try {
+        const res = await api("", {}, token);
+        const j = res.ok ? await res.json() : null;
+        if (!j || !j.permissions || !j.permissions.push) {
+          msg.textContent = "Token godkändes inte eller saknar skrivrättigheter till repot.";
+          btn.disabled = false; return;
+        }
+        setToken(token); admin = true;
+        await loadSettings();
+        location.hash = ""; render();
+      } catch { msg.textContent = "Kunde inte kontakta GitHub."; btn.disabled = false; }
+    });
+    panel.append(ol, form,
+      el("p", "hint", "Token sparas bara i den här fliken och försvinner när du stänger den. Den skrivs aldrig in i sidans kod."));
+    app.appendChild(panel);
+  }
+
+  function render(scroll = true) {
+    if (!tree) return;
+    const hash = location.hash.slice(1);
+    app.replaceChildren();
+    if (admin) app.appendChild(adminBar());
+    if (hash === "!admin" && !admin) renderLogin();
+    else if (hash && hash !== "!admin") {
+      let c; try { c = decodeURIComponent(hash); } catch { c = hash; }
+      renderLabs(c);
+    } else renderCourses();
+    if (!admin) {
+      const f = el("footer"); const a = el("a", "", "Admin"); a.href = "#!admin"; f.appendChild(a);
+      app.appendChild(f);
+    }
+    if (scroll) window.scrollTo(0, 0);
+  }
+
+  /* ---------- spara och logga ut ---------- */
+  async function saveSettings() {
+    for (const c of Object.keys(settings)) {
+      for (const k of Object.keys(settings[c])) {
+        const s = settings[c][k];
+        for (const f of ["dolj", "visa", "nyckel"]) if (!s[f]) delete s[f];
+        if (!Object.keys(s).length) delete settings[c][k];
+      }
+      if (!Object.keys(settings[c]).length) delete settings[c];
+    }
+    saving = true; statusMsg = ""; render(false);
+    try {
+      const body = { message: "Uppdaterar labbar.json via adminläget", content: b64enc(JSON.stringify(settings, null, 2) + "\n") };
+      if (sha) body.sha = sha;
+      const res = await api("contents/labbar.json", { method: "PUT", body: JSON.stringify(body) });
+      if (res.ok) {
+        sha = (await res.json()).content.sha; dirty = false; statusErr = false;
+        statusMsg = "Sparat. Ändringarna syns för besökare om cirka en minut.";
+      } else if (res.status === 401 || res.status === 403 || res.status === 404) {
+        statusErr = true; statusMsg = "Token saknar behörighet eller har gått ut. Logga ut och in igen.";
+      } else {
+        statusErr = true; statusMsg = "Kunde inte spara (fel " + res.status + "). Ladda om sidan och försök igen.";
+      }
+    } catch { statusErr = true; statusMsg = "Kunde inte kontakta GitHub."; }
+    saving = false; render(false);
+  }
+
+  async function logout() {
+    if (dirty && !confirm("Du har osparade ändringar. Logga ut ändå?")) return;
+    setToken(""); admin = false; dirty = false; statusMsg = "";
+    await loadSettings(); location.hash = ""; render();
+  }
+
+  /* ---------- hämta data ---------- */
+  async function loadSettings() {
+    settings = {}; sha = null;
+    try {
+      if (admin) {
+        const res = await api("contents/labbar.json");
+        if (res.status === 401) { setToken(""); admin = false; }
+        else if (res.status === 404) return;
+        else if (res.ok) {
+          const j = await res.json(); sha = j.sha;
+          settings = JSON.parse(b64dec(j.content)); return;
+        }
+      }
+      const r = await fetch("labbar.json", { cache: "no-store" });
+      if (r.ok) settings = await r.json();
+    } catch { settings = settings || {}; }
+    if (typeof settings !== "object" || settings === null) settings = {};
+  }
+
+  async function load() {
+    info = detectRepo();
+    if (!info) { showError("Kunde inte avgöra vilket repo som ska läsas.", "Fyll i owner och repo i CONFIG högst upp i skriptet."); return; }
+    admin = !!getToken();
+    try {
+      let res = await api("git/trees/HEAD?recursive=1");
+      if (res.status === 401 && admin) { setToken(""); admin = false; res = await api("git/trees/HEAD?recursive=1"); }
+      if (res.status === 403 || res.status === 429) { showError("GitHub tillåter inte fler anrop just nu.", "Vänta en stund och ladda om sidan."); return; }
+      if (res.status === 404) { showError("Repot hittades inte.", `Kontrollerade ${info.owner}/${info.repo}. Repot måste vara publikt.`); return; }
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+      const found = {};
+      for (const item of data.tree) {
+        const m = item.type === "blob" && item.path.match(/^([^/]+)\/([^/]+)\/index\.html$/);
+        if (!m) continue;
+        const [, course, lab] = m;
+        if (/^[._]/.test(course) || /^[._]/.test(lab) || CONFIG.exclude.includes(course)) continue;
+        (found[course] ||= []).push(lab);
+      }
+      for (const c in found) found[c].sort(collator.compare);
+      tree = found;
+      await readKeys();
+      await loadSettings();
+      render();
+    } catch (err) {
+      showError("Det gick inte att hämta listan över kurser.", "Kontrollera internetanslutningen och ladda om sidan.");
+      console.error(err);
+    }
+  }
+
+  window.addEventListener("hashchange", () => render());
+  load();
+</script>
+</body>
+</html>
