@@ -130,7 +130,7 @@
     !s.dolj && !(s.visa && s.visa > today()) && (ignoreKey || !s.nyckel || viewerHashes.has(s.nyckel));
   const labVisible = (course, lab, ignoreKey) =>
     entryVisible(entry(course, "_kurs"), ignoreKey) && entryVisible(entry(course, lab), ignoreKey);
-  const visibleLabs = course => admin ? tree[course] : tree[course].filter(l => labVisible(course, l));
+  //const visibleLabs = course => admin ? tree[course] : tree[course].filter(l => labVisible(course, l));
   const visibleCourses = () => Object.keys(tree).filter(c => visibleLabs(c).length > 0).sort(collator.compare);
 
   function statusText(s) {
