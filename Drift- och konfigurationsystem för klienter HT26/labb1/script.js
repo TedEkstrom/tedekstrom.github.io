@@ -136,14 +136,6 @@
     document.body.classList.remove("nav-open");
   });
 
-  var hide = $("#hide-done");
-  hide.checked = store.get("hideDone", false);
-  document.body.classList.toggle("hide-done", hide.checked);
-  hide.addEventListener("change", function () {
-    document.body.classList.toggle("hide-done", hide.checked);
-    store.set("hideDone", hide.checked);
-  });
-
   var minParts = $("#min-parts");
   minParts.checked = store.get("minParts", false);
   document.body.classList.toggle("min-parts", minParts.checked);

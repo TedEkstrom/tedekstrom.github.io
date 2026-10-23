@@ -327,8 +327,6 @@ body.min-parts .part.complete:not(.force-open) .part-body { display: none; }
 .step-body ul { margin: 0 0 0.9rem; padding-left: 1.2rem; }
 .step.done .step-body { opacity: 0.5; transition: opacity 0.2s ease; }
 .step.done .step-body:hover, .step.done .step-body:focus-within { opacity: 0.85; }
-.hide-done .step.done .step-body > :not(:first-child) { display: none; }
-.hide-done .step.done .step-body > p:first-child { margin: 0; }
 .step.flash { animation: flash 1.4s ease-out; }
 @keyframes flash { 0% { background: var(--accent-tint); } 100% { background: transparent; } }
 
@@ -449,7 +447,6 @@ pre code { background: none; padding: 0; }
   .part { break-before: page; }
   figure.code, .note, figure.table { break-inside: avoid; }
   .step.done .step-body { opacity: 1; }
-  .hide-done .step.done .step-body > * { display: revert; }
   .check { border-color: #000; }
 }
 

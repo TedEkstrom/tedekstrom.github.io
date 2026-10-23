@@ -549,13 +549,32 @@
         },
         {
          "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-2db88a",
-         "html": "<p>Kontrollera att rollen Distribution Point finns med i listan.</p>\n<p>Den nya Distribution Point-servern är nu integrerad i Configuration Manager-miljön och kan användas för att distribuera programvara, operativsystem och annat innehåll till klienterna.</p>\n<p>Godkänt uppgifter</p>\n<p>För godkänd-delen krävs endast korta svar på uppgiften. Tänk bara på att svara fullständigt på frågan.</p>\n<h4>Uppgift 1A</h4>\n<p>Vad händer om du försöker starta Configuration Manager-konsolen när databasen inte är i gång? Beskriv vad som sker och illustrera svaret med lämpliga figur/skärmbild.</p>\n<h4>Uppgift 1B</h4>\n<p>Vilka tjänster i Component Status hade statusen Critical respektive Warning? Gick det att återställa dem? Beskriv hur du gick till väga och illustrera svaret med lämpliga figur/skärmbild.</p>\n<h4>Uppgift 1C</h4>\n<p>Hur går du till väga för att hämta objekt från containern hkr.se\\Computers? Beskriv processen steg för steg och illustrera svaret med lämpliga figur/skärmbild.</p>\n<h4>Uppgift 1D</h4>\n<p>Hur gör du om du i stället vill ange en sökväg direkt till en OU (Organizational Unit), på samma sätt som vid AD Users Discovery eller AD Computer Discovery? Beskriv tillvägagångssättet och illustrera svaret med lämpliga figur/skärmbild.</p>\n<h4>Uppgift 1E</h4>\n<p>Hur konfigurerar du sökningen för att genomsöka hela domänen i stället för enbart en specifik OU? Beskriv tillvägagångssättet och komplettera svaret med en figur eller skärmbild.</p>\n<aside class=\"note\"><p><strong>Notera: Miljö kommer att användas under hela kursen och ska därför sparas efter varje gång.</strong></p></aside>"
+         "html": "<p>Kontrollera att rollen Distribution Point finns med i listan.</p>\n<p>Den nya Distribution Point-servern är nu integrerad i Configuration Manager-miljön och kan användas för att distribuera programvara, operativsystem och annat innehåll till klienterna.</p>"
         }
        ]
       }
      ]
     }
    ]
+  },
+  {
+   "id": "godkant-uppgifter",
+   "title": "Godkänt uppgifter",
+   "intro": [
+    "<p>För godkänd-delen krävs endast korta svar på uppgiften. Tänk bara på att svara fullständigt på frågan.</p>",
+    "<h4>Uppgift 1A</h4>",
+    "<p>Vad händer om du försöker starta Configuration Manager-konsolen när databasen inte är i gång? Beskriv vad som sker och illustrera svaret med lämpliga figur/skärmbild.</p>",
+    "<h4>Uppgift 1B</h4>",
+    "<p>Vilka tjänster i Component Status hade statusen Critical respektive Warning? Gick det att återställa dem? Beskriv hur du gick till väga och illustrera svaret med lämpliga figur/skärmbild.</p>",
+    "<h4>Uppgift 1C</h4>",
+    "<p>Hur går du till väga för att hämta objekt från containern hkr.se\\Computers? Beskriv processen steg för steg och illustrera svaret med lämpliga figur/skärmbild.</p>",
+    "<h4>Uppgift 1D</h4>",
+    "<p>Hur gör du om du i stället vill ange en sökväg direkt till en OU (Organizational Unit), på samma sätt som vid AD Users Discovery eller AD Computer Discovery? Beskriv tillvägagångssättet och illustrera svaret med lämpliga figur/skärmbild.</p>",
+    "<h4>Uppgift 1E</h4>",
+    "<p>Hur konfigurerar du sökningen för att genomsöka hela domänen i stället för enbart en specifik OU? Beskriv tillvägagångssättet och komplettera svaret med en figur eller skärmbild.</p>",
+    "<aside class=\"note\"><p><strong>Notera: Miljö kommer att användas under hela kursen och ska därför sparas efter varje gång.</strong></p></aside>"
+   ],
+   "parts": []
   },
   {
    "id": "val-godkant-uppgifter",
