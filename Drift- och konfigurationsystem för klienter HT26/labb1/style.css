@@ -110,6 +110,11 @@ button { font: inherit; color: inherit; }
   gap: 1.25rem;
 }
 .side-head { position: relative; padding-right: 2.4rem; }
+.side-logo { display: block; height: 3.1rem; width: auto; margin: 0 0 0.9rem; }
+.side-foot { padding-top: 0.25rem; }
+.brand-word { display: block; width: 10.5rem; max-width: 100%; height: auto; }
+.page-foot { display: none; margin: 3rem 0 1rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); }
+.topbar-logo { display: none; }
 .side-course { margin: 0; font-size: 0.8rem; color: var(--muted); }
 
 /* fäll undan och ta fram sidopanelen */
@@ -414,6 +419,8 @@ pre code { background: none; padding: 0; }
     border-bottom: 1px solid var(--rule);
     background: var(--surface);
   }
+  .topbar-logo { display: block; height: 1.9rem; width: auto; }
+  .page-foot { display: block; }
   .topbar-title { flex: 1; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .topbar-progress { font-size: 0.85rem; color: var(--muted); }
   #side-expand { display: none !important; }
@@ -431,6 +438,7 @@ pre code { background: none; padding: 0; }
 /* ---------------------------------------------------------------- utskrift */
 @media print {
   .sidebar, .topbar, .copy, .skip, .tip { display: none !important; }
+  .page-foot { display: block; }
   figure.code { width: auto; min-width: 0; max-width: none; }
   main { margin: 0; padding: 0; }
   main > * { max-width: none; }
