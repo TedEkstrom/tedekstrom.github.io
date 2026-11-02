@@ -1,0 +1,386 @@
+{
+ "id": "laboration-6",
+ "title": "Laboration 6",
+ "course": "",
+ "meta": "",
+ "authors": "",
+ "chapters": [
+  {
+   "id": "forutsattningar-for-laborationen",
+   "title": "Förutsättningar för laborationen",
+   "intro": [
+    "<p>Denna laboration kräver att du hämtar maskinerna under X:\\Course-specific\\Drift- och konfigurationssystem för klienter\\Labb6</p>"
+   ],
+   "parts": []
+  },
+  {
+   "id": "laborationen-innehaller-foljande-delar",
+   "title": "Laborationen innehåller följande delar:",
+   "intro": [
+    "<ul><li>Logga in</li><li>Lägg till klienter att hantera</li><li>Skapa Policy</li><li>Skapa Configurationpolicy</li><li>Kontrollera Compliance</li><li>Installera applikation</li></ul>"
+   ],
+   "parts": []
+  },
+  {
+   "id": "logga-in",
+   "title": "Logga in",
+   "intro": [
+    "<p>Börja med att logga in på ubuntu som innehåller en Docker container med med tjänsten Relution.</p>",
+    "<p>Det är en MDM-mjukvara som kan hantera mobila enheter och är skapad för framtidens hantering. Den är av samma sort som Intune men saknar MAM-hanteringen. Alltså enheterna måste vara ditlagda för att den ska kunna hantera dem.</p>",
+    "<p>Väl inne så starta webbläsaren och gå till sökvägen localhost. Varnar den för att den inte använder tls så klicka bara att du litar på sidan.</p>",
+    "<p>Logga in med kontot admin@relution.local med lösenordet Passw0rd.</p>",
+    "<figure class=\"figure\"><img src=\"media/bild01.png\" alt=\"\" loading=\"lazy\"></figure>",
+    "<p>När du kommer in presenteras du för det globala fönstret men för att kunna göra konfiguration måste man befinna sig i organisationsläget. Den skapar man själv men er är redan skapad.</p>",
+    "<p>För att hoppa in i den klicka på Global och välj Högskolan Kristianstad.</p>",
+    "<figure class=\"figure\"><img src=\"media/bild02.png\" alt=\"\" loading=\"lazy\"></figure>"
+   ],
+   "parts": []
+  },
+  {
+   "id": "guide",
+   "group": true,
+   "title": "Konfigurationsmoment",
+   "intro": [],
+   "parts": [
+    {
+     "id": "lagg-till-klient-att-hantera",
+     "title": "Lägg till klient att hantera",
+     "intro": [
+      "<p>Först ska vi börja med att hämta in en klientdator som ska hanteras:</p>"
+     ],
+     "groups": [
+      {
+       "heading": "Konfiguration",
+       "steps": [
+        {
+         "id": "lagg-till-klient-att-hantera-0a6404",
+         "html": "<p>Börja med och gå till höger sida gå till listan för att se alla funktioner som finns.</p>\n<figure class=\"figure\"><img src=\"media/bild03.png\" alt=\"\" loading=\"lazy\"></figure>"
+        },
+        {
+         "id": "lagg-till-klient-att-hantera-d2583b",
+         "html": "<p>Därefter välj Devices &gt; Enrollments.</p>\n"
+        },
+        {
+         "id": "lagg-till-klient-att-hantera-ec604f",
+         "html": "<p>Där ska vi skapa en ny inhämtning för en dator. Detta är för varje dator som man vill lägga till. (Naturligtvis kan man hämta in fler samtidigt också.)</p>\n"
+        },
+        {
+         "id": "lagg-till-klient-att-hantera-6ab7e3",
+         "html": "<p>Där ifrån tryck på + Add.</p>\n"
+        },
+        {
+         "id": "lagg-till-klient-att-hantera-36dae4",
+         "html": "<p>Notera alla de olika plattformarna som kan hanteras av detta system (detta är samma för Intune).</p>\n"
+        }
+       ],
+       "lead": []
+      },
+      {
+       "heading": "Gör följande konfiguration",
+       "steps": [
+        {
+         "id": "lagg-till-klient-att-hantera-aad1c5",
+         "html": "<p>Plattform: Windows</p>\n"
+        },
+        {
+         "id": "lagg-till-klient-att-hantera-f96575",
+         "html": "<p>Ownership: COD (Corporation Device)</p>\n"
+        },
+        {
+         "id": "lagg-till-klient-att-hantera-fe7c6d",
+         "html": "<p>Name: Dator1</p>\n"
+        },
+        {
+         "id": "lagg-till-klient-att-hantera-ccf3dc",
+         "html": "<p>Tryck därefter på Save för resterande kan vara standard.</p>\n<p>När man ska använda den ska man hoppa in i den igen och gå längst ner. Det är den koden som finns där som man ska använda.</p>\n<figure class=\"figure\"><img src=\"media/bild04.png\" alt=\"\" loading=\"lazy\"></figure>"
+        }
+       ]
+      },
+      {
+       "heading": "Klientdatorn som ska hanteras",
+       "steps": [
+        {
+         "id": "lagg-till-klient-att-hantera-2c6dfb",
+         "html": "<p>Logga in på dator1 med admin och Passw0rd.</p>\n"
+        },
+        {
+         "id": "lagg-till-klient-att-hantera-178d45",
+         "html": "<p>Gå därefter till Settings &gt; Accounts &gt; Access work or School</p>\n"
+        },
+        {
+         "id": "lagg-till-klient-att-hantera-65c107",
+         "html": "<p>Klicka på Enroll only in device managment och i rutan skriv din admins användarnamn: admin@relution.local.</p>\n"
+        },
+        {
+         "id": "lagg-till-klient-att-hantera-ce2d0f",
+         "html": "<p>Därefter så säger den att den inte kan hitta den själv så då ska du lägga till adressen till servern också: https://relution.local.</p>\n<figure class=\"figure\"><img src=\"media/bild05.png\" alt=\"\" loading=\"lazy\"></figure>"
+        },
+        {
+         "id": "lagg-till-klient-att-hantera-41928b",
+         "html": "<p>Nu ska du lägga till den kod som du hämtade tidigare i mitt fall är det:1d37e7. <em>Naturligtvis kommer du att ha en annan kod.</em></p>\n"
+        },
+        {
+         "id": "lagg-till-klient-att-hantera-ed2a22",
+         "html": "<p>När den är inhämtad så står det att det finns en väldigt bra synk-knapp man kan använda som synkroniserar de senaste inställningarna. Det är i grund och botten samma sak som att göra en gpupdate men för MDM-enheter i stället. (Du kan inte använda gpupdate).</p>\n<p>När den är hanterad ska du se den finnas högst upp på rutan.</p>"
+        }
+       ]
+      },
+      {
+       "heading": "I din server se den hanterade maskinen",
+       "steps": [
+        {
+         "id": "lagg-till-klient-att-hantera-2143f9",
+         "html": "<p>Hoppa tillbaka in till din Relution server och gå till Devices &gt; Inventory. Är namnet inte bytt på maskinen (vilket Microsoft säger numera man inte behöver göra längre) så kan du se den med sitt korrekt datornamn.</p>\n<figure class=\"figure\"><img src=\"media/bild07.png\" alt=\"\" loading=\"lazy\"></figure>"
+        },
+        {
+         "id": "lagg-till-klient-att-hantera-0f2a44",
+         "html": "<p>Här kan man även se att den är Compliant men det är för att vi inte har satt några krav för den än och allt oavsett säkerhetskrav osv är okej.</p>\n"
+        },
+        {
+         "id": "lagg-till-klient-att-hantera-f9b862",
+         "html": "<p>Det ska vi lösa i nästa steg.</p>\n"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "skapa-policy",
+     "title": "Skapa policy",
+     "intro": [
+      "<p>Skapa policy som ska appliceras på dina klienter:</p>"
+     ],
+     "groups": [
+      {
+       "heading": "Konfiguration",
+       "steps": [
+        {
+         "id": "skapa-policy-9cb2e2",
+         "html": "<p>Gå ner till Devices &gt; Policies</p>\n"
+        },
+        {
+         "id": "skapa-policy-b79a55",
+         "html": "<p>Därefter välj + Add</p>\n"
+        }
+       ],
+       "lead": []
+      },
+      {
+       "heading": "Gör följande konfiguration",
+       "steps": [
+        {
+         "id": "skapa-policy-e0e632",
+         "html": "<p>Välj Windows Ikonen</p>\n"
+        },
+        {
+         "id": "skapa-policy-c47b2a",
+         "html": "<p>Namn: Säkerhetspolicy</p>\n"
+        },
+        {
+         "id": "skapa-policy-efc007",
+         "html": "<p>Save</p>\n"
+        }
+       ]
+      },
+      {
+       "heading": "Lägg till komponent",
+       "steps": [
+        {
+         "id": "skapa-policy-601baf",
+         "html": "<p>Tryck på + Add</p>\n"
+        },
+        {
+         "id": "skapa-policy-6daadb",
+         "html": "<p>Sök efter Bitlocker och välj den</p>\n"
+        },
+        {
+         "id": "skapa-policy-f31a51",
+         "html": "<p>Notera att du tas till en plats där du kan göra olika konfigurationer för Bitlocker men notera bara vad som kan göras och tryck därefter på Save.</p>\n<p>När du har kommit ut så ligger den där redo att användas. För att använda den ska man publicera den.</p>\n<figure class=\"figure\"><img src=\"media/bild08.png\" alt=\"\" loading=\"lazy\"></figure>\n<aside class=\"note\"><p>Notera att man kan lägga till fler saker som ska hanteras av den och då är det bara att trycka + Add igen och då kommer du till samma plats där man kan leta upp fler policies.</p></aside>"
+        }
+       ]
+      },
+      {
+       "heading": "Publicera din Policy",
+       "steps": [
+        {
+         "id": "skapa-policy-3a744c",
+         "html": "<p>Nu ska din policy publiceras och dina klienter som finns här kommer att få den nu.</p>\n<figure class=\"figure\"><img src=\"media/bild09.png\" alt=\"\" loading=\"lazy\"></figure>"
+        }
+       ]
+      },
+      {
+       "heading": "Lägg på policy",
+       "steps": [
+        {
+         "id": "skapa-policy-785935",
+         "html": "<p>Hoppa nu tillbaka till Devices &gt; Inventory och klicka in på datorn.</p>\n"
+        },
+        {
+         "id": "skapa-policy-f8f4f6",
+         "html": "<p>Kontrollera först så att den har fått ageten installerad på sig genom att klicka på Actions. Det ska stå att den är levererad. På samma sätt som på Configuration manager finns det en agent som körs och lägger på inställningarna.</p>\n<figure class=\"figure\"><img src=\"media/bild10.png\" alt=\"\" loading=\"lazy\"></figure>"
+        },
+        {
+         "id": "skapa-policy-4f43f5",
+         "html": "<p>Därefter hoppa in i fliken Policy och + Add policy.</p>\n"
+        },
+        {
+         "id": "skapa-policy-b0fd96",
+         "html": "<p>Där ska du hitta din policy som du skapade tidigare – lägg på den. Ge den grupp allt lägger sig i med ett enkelt namn exempelvis grupp.</p>\n<p>Nu när den är pålagd och körd kan man hoppa tillbaka till klientdatorn och köra en synkronisering. Detta gör man enbart för att det ska gå snabbare. Den kommer till slut att synkronisera själv. Den synkroniserar varje 3 minuter under 15 minuter, därefter varje 15 minuter under två timmar och till slut varje åttonde timme.</p>"
+        }
+       ]
+      },
+      {
+       "heading": "Manuell synkronisering",
+       "steps": [
+        {
+         "id": "skapa-policy-3e7c76",
+         "html": "<p>Ifrån klientdatorn gå till Settings &gt; Account &gt; Access work or school och expandera kopplingen.</p>\n<figure class=\"figure\"><img src=\"media/bild11.png\" alt=\"\" loading=\"lazy\"></figure>"
+        },
+        {
+         "id": "skapa-policy-4742cb",
+         "html": "<p>Därefter så trycker man på info och där inne finns det en synkroniseringsknapp och information om senaste synkronisering.</p>\n"
+        },
+        {
+         "id": "skapa-policy-d8c951",
+         "html": "<p>Tryck på sync och invänta att den blir färdig.</p>\n"
+        },
+        {
+         "id": "skapa-policy-b4c6e8",
+         "html": "<p>Därefter hoppa tillbaka till Relution-servern och tillbaka under Devices &gt; Inventory.</p>\n"
+        },
+        {
+         "id": "skapa-policy-e1728b",
+         "html": "<p>Man kan se när den är körd och pålagd att datorn inte länge är compliant.</p>\n<figure class=\"figure\"><img src=\"media/bild12.png\" alt=\"\" loading=\"lazy\"></figure>"
+        },
+        {
+         "id": "skapa-policy-e37955",
+         "html": "<p>Detta är eftersom den förväntar sig att datorn har Bitlocker aktiverad. Vi ska efter detta nu tvinga på en Bitlocker-konfiguration på klientdatorn.</p>\n"
+        }
+       ]
+      },
+      {
+       "heading": "Lägg på en konfigurationspolicy",
+       "steps": [
+        {
+         "id": "skapa-policy-c749d0",
+         "html": "<p>Klicka in på datorn igen under Devices &gt; Inventory och hoppa tillbaka till Actions.</p>\n"
+        },
+        {
+         "id": "skapa-policy-a26955",
+         "html": "<p>Tryck på Apply actions och välj Enable Bitlocker.</p>\n"
+        },
+        {
+         "id": "skapa-policy-d662cb",
+         "html": "<p>Lägg på C-enheten</p>\n<figure class=\"figure\"><img src=\"media/bild13.png\" alt=\"\" loading=\"lazy\"></figure>"
+        },
+        {
+         "id": "skapa-policy-1be293",
+         "html": "<p>Klicka på Apply på den datorn och låt den köra färdigt.</p>\n"
+        },
+        {
+         "id": "skapa-policy-90b8db",
+         "html": "<p>Uppdatera klienten med senaste policyn på samma sätt som tidigare.</p>\n<aside class=\"note\"><p>Obs! Om det tar lång tid för den att få Bitlocker aktiverad så kan du i stället göra det manuellt.</p></aside>"
+        }
+       ]
+      },
+      {
+       "heading": "Compliant igen",
+       "steps": [
+        {
+         "id": "skapa-policy-410439",
+         "html": "<p>När den är aktiverad så ska du hoppa tillbaka och se om den har hunnit att uppdatera sig med att datorns disk är krypterad.</p>\n"
+        },
+        {
+         "id": "skapa-policy-f75413",
+         "html": "<p>Är den uppdaterad så ska du se att datorn är Compliant igen.</p>\n"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "installera-en-applikation",
+     "title": "Installera en applikation",
+     "intro": [
+      "<p>Som sista del ska vi installera en lite applikation på samma sätt som vi har gjort i Configuration Manager. Du kommer att märka att det är liknande förfarande på samma sätt som det är när man gör det via Intune. Man behöver ett installationskommando för att den ska installeras tyst utan någon interaktion.</p>",
+      "<p>Lägg på en applikation:</p>"
+     ],
+     "groups": [
+      {
+       "heading": "Konfiguration",
+       "steps": [
+        {
+         "id": "installera-en-applikation-506eb5",
+         "html": "<p>Ifrån sidopanelen gå till Apps &gt; App store. Här kan du lägga till fler olika typer av appar.</p>\n"
+        },
+        {
+         "id": "installera-en-applikation-6b3f83",
+         "html": "<p>Tryck på + Add och därefter Nativ app.</p>\n"
+        },
+        {
+         "id": "installera-en-applikation-3e0dbe",
+         "html": "<p>Där ifrån tryck på Select och i nerladdad välj den app som finns där Firefox-setup-159.0.msi,</p>\n"
+        }
+       ],
+       "lead": []
+      },
+      {
+       "heading": "Gör följande inställningar",
+       "steps": [
+        {
+         "id": "installera-en-applikation-3e4795",
+         "html": "<p>Name (English): Firefox</p>\n"
+        },
+        {
+         "id": "installera-en-applikation-22f57c",
+         "html": "<p>Version name: 159</p>\n"
+        },
+        {
+         "id": "installera-en-applikation-54e1b5",
+         "html": "<p>Detection rule (Product code):1294A4C5-9977-480F-9497-C0EA1E630130</p>\n"
+        },
+        {
+         "id": "installera-en-applikation-679676",
+         "html": "<p>Tryck därefter Save.</p>\n"
+        }
+       ]
+      },
+      {
+       "heading": "Rulla ut app",
+       "steps": [
+        {
+         "id": "installera-en-applikation-862823",
+         "html": "<p>Hoppa till Device &gt; Inventory och Installed apps</p>\n"
+        },
+        {
+         "id": "installera-en-applikation-8a2ebb",
+         "html": "<p>Tryck på + Add och Deploy Relition store app och next.</p>\n"
+        },
+        {
+         "id": "installera-en-applikation-f2cc37",
+         "html": "<p>Välj den app som du lade till precis.</p>\n<figure class=\"figure\"><img src=\"media/bild14.png\" alt=\"\" loading=\"lazy\"></figure>"
+        },
+        {
+         "id": "installera-en-applikation-892584",
+         "html": "<p>Och lägg på den på din dator.</p>\n"
+        },
+        {
+         "id": "installera-en-applikation-3dcce7",
+         "html": "<p>Hoppa till Actions och notera att den ligger som pågående utrullning. (uppdatea även din klient om den senaste informationen),</p>\n"
+        },
+        {
+         "id": "installera-en-applikation-58f435",
+         "html": "<p>Den bör vara installera inom en kvart.</p>\n"
+        },
+        {
+         "id": "installera-en-applikation-ecdf68",
+         "html": "<p>(Ligger din Bitlocker action fortfarande i ”pipen” så kan du avbryta den.)</p>\n<aside class=\"note\"><p>Notera att det finns flera inställningar man kan göra. Den stödjer också Autopilot men då måste den vara sammanbunden med Entra ID. Eftersom den hämtar sin information ifrån Azure.</p></aside>\n<p>Du hittar fler inställningar under sidopanelen settings. Du kan göra fler inställningar om du vill och testa runder. Lägg exempelvis till en dator till som ska hanteras.</p>"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
