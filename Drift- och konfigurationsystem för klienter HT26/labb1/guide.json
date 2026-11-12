@@ -242,8 +242,8 @@
          "html": "<p>Välj Active Directory site.</p>\n"
         },
         {
-         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-b23826",
-         "html": "<p>Klicka därefter på Browse och välj den Active Directory Site som finns i miljön. Den bör heta Kristinastad.</p>\n"
+         "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-0823c8",
+         "html": "<p>Klicka därefter på Browse och välj den Active Directory Site som finns i miljön. Den bör heta Kristianstad.</p>\n"
         },
         {
          "id": "lara-dig-hitta-i-konsolen-for-configuration-manager-0a91bb",
@@ -589,13 +589,7 @@
     "<p>Komplettera beskrivningen med en figur/skärmbild som visar momentet.</p>",
     "<p>Besvara även följande frågor:</p>",
     "<p>Vad behöver du som administratör göra för att klientdatorer ska anslutas till den nya Configuration Manager-siten?</p>",
-    "<p>Krävs det att det finns en domänkontrollant på den nya siten? Motivera ditt svar.</p>",
-    "<h4>Uppgift 1G</h4>",
-    "<p>Hur kan du verifiera att den nya siten och boundary fungerar som avsett?</p>",
-    "<p>Beskriv vilka kontroller du genomförde för att verifiera att konfigurationen fungerar korrekt.</p>",
-    "<p>Finns det loggfiler som kan användas för att säkerställa att klienten har identifierat och anslutit till rätt site och boundary? Beskriv vilka loggfiler du granskade, hur du analyserade dem och vilka resultat de visade.</p>",
-    "<p>Redovisa dina observationer, resultat och slutsatser samt reflektera över hur dessa bekräftar att konfigurationen fungerar som avsett.</p>",
-    "<p>Använd figur/skärmbild för att tydligt visa hur du genomförde verifieringen och vilket resultat du fick.</p>"
+    "<p>Krävs det att det finns en domänkontrollant på den nya siten? Motivera ditt svar.</p>"
    ],
    "parts": []
   }
