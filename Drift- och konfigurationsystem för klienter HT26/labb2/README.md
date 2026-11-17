@@ -32,6 +32,11 @@ Aktiveras automatiskt när dokumentet har rubrikerna "Översikt" och "Detaljsteg
     py .\docx2guide.py MinGuide.pdf
 
 PDF saknar Words stilar, så strukturen tolkas ur teckenstorlek, typsnitt och läge. Resten av flödet är detsamma som för Word.
+- Fetstilta rubriker som bara är ~1 pt större än brödtexten (t.ex. 11 pt mot 10 pt, som när Word exporterar Rubrik 2) räknas som rubriker.
+  Fetstilta korta stycken utan slutpunkt och rader som "Uppgift 2G" blir underrubriker, precis som i Word-läget.
+- Radavståndet i PDF:en mäts upp och styr var ett nytt stycke börjar. En rad som slutar på kolon avslutar stycket.
+- Text före titeln (fakultet, program, kurs) i en vanlig guide blir `course`; datum och sidnummer släpps.
+- Nivå 2-punkter (Courier-"o") och punkter i Symbol-typsnitt känns igen. Logotyper i vänstermarginalen sparas inte.
 - Största rubrikstorleken = kapitel, näst största = del, övriga större än brödtext = underrubriker (Översikt, Detaljsteg …).
   Är första sidan en titelsida (två eller fler rader i största storleken) behandlas de raderna som kurs och titel.
   Kan ställas in manuellt: `"pdfHeadingSizes": {"h1": 20, "h2": 17, "sub": 14}` i guide.config.json.
@@ -47,3 +52,6 @@ PDF saknar Words stilar, så strukturen tolkas ur teckenstorlek, typsnitt och l�
 - Ett kort stycke som är helt fetstilt (utan punkt i slutet) tolkas som underrubrik. Följs det av steg blir det en stegrubrik inom delen. Följs det inte av några listpunkter (t.ex. "Godkänt uppgifter") blir det ett eget avsnitt.
 - Korta stycken som "Uppgift 2A" / "Fråga 3" blir underrubriker.
 - Sektioner vars rubrik innehåller förutsättning, innehåller, rapport, uppgifter, inledning, bakgrund eller syfte räknas aldrig som stegsektioner. Ändra listan med `infoSections` i guide.config.json.
+
+## Logotyper
+`media/hkr-logo.png` (kort HKR) ligger högst upp i sidopanelen, och i topplisten på smala skärmar. `media/hkr-ord.png` (Högskolan Kristianstad / Kristianstad University, transparent) ligger längst ner i sidopanelen, och som sidfot på smala skärmar och vid utskrift. Byt ut filerna för att byta logotyp; en vektorversion (SVG) ger skarpare resultat än PNG.

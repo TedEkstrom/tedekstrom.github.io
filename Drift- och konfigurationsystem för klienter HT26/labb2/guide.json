@@ -694,7 +694,7 @@
     "<h4>Uppgift 2H</h4>",
     "<p>Blir det någon skillnad om du inte markerar alternativet Extract a specific image index from the specified WIM file när du skapar Task Sequence? Ser du någon skillnad i innehållet under \\CM\\ISO? Beskriv resultatet och de steg som genomförs. Bifoga även en figur som visar när avbildningen har importerats färdigt.</p>",
     "<h4>Uppgift 2I</h4>",
-    "<p>Ta bort samtliga och att skapa en deployment som klientdatorn inte har behörighet att ta del av. Hur kan du avgöra att användaren eller klienten saknar åtkomst till deploymenten? Beskriv och illustrera med en figur.</p>",
+    "<p>Ta bort samtliga deployments och skapa en ny som klientdatorn inte har behörighet att ta del av. Hur kan du avgöra att användaren eller klienten saknar åtkomst till deploymenten? Beskriv och illustrera med en figur.</p>",
     "<h4>Uppgift 2J</h4>",
     "<p>Om du vill distribuera samma programvara på nytt till klienterna, finns det något sätt att göra detta i Configuration Manager? Beskriv de steg som krävs och illustrera processen med en figur.</p>",
     "<h4>Uppgift 2K</h4>",
