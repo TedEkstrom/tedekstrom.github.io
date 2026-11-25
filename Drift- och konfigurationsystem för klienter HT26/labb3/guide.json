@@ -25,95 +25,489 @@
    "id": "rapport",
    "title": "Rapport",
    "intro": [
-    "<p>I denna laboration förekommer det sex G-uppgifter och fyra VG-uppgifter som ska besvaras. Samtliga frågor finns samlade i slutet av laborationen.</p>",
-    "<h4>Navigera till Assets and Compliance</h4>",
-    "<p>Collections fungerar som grupper av objekt i Configuration Manager och baseras på databasfrågor (queries) som avgör vilka objekt som ska inkluderas. En User Collection används för att samla användarobjekt och kan endast innehålla användarkonton.</p>",
-    "<ul><li>För att navigera till användarsamlingarna går du till:  Assets and Compliance → Overview → User Collections.</li></ul>",
-    "<figure class=\"figure\"><img src=\"media/bild01.png\" alt=\"\" loading=\"lazy\"></figure>",
-    "<aside class=\"note\"><p>Notera att det redan finns fördefinierade Collections som kan användas. Som är till för att fånga upp både grupper och användare.</p></aside>",
-    "<p>Lokalisera All Systems</p>",
-    "<p>Här finns också flera andra fördefinierade Collections. Dessa används för att organisera och hantera datorer utifrån olika kriterier och kan delas in i flera kategorier beroende på syfte och konfiguration. Samlingen All Systems innehåller samtliga datorobjekt som har upptäckts och registrerats i Configuration Manager.</p>",
-    "<ul><li>Stanna kvar under Assets and Compliance och välj Device Collections.</li><li>Studera de olika Collections som redan finns skapade i miljön.</li><li>Notera att alla upptäckta datorer som standard återfinns i samlingen All Systems.</li></ul>",
-    "<figure class=\"figure\"><img src=\"media/bild02.png\" alt=\"\" loading=\"lazy\"></figure>",
-    "<p>För mer information om de olika typerna av Collections och hur de används i Configuration Manager, se följande länk: https://learn.microsoft.com/en-us/mem/configmgr/core/clients/manage/Collections/introduction-to-Collections</p>",
-    "<p>Automatiskt uppdaterad Collection</p>",
-    "<p>För att kontrollera om en Collection uppdateras automatiskt behöver du öppna dess egenskaper och granska medlemskapsinställningarna.</p>",
-    "<p>Högerklicka på den aktuella Collection och välj Properties.</p>",
-    "<ul><li>Gå till fliken Membership Rules.</li><li>Kontrollera att alternativet Use incremental updates for this Collection är markerat. Detta innebär att Collectionen uppdateras löpande när förändringar upptäcks i databasen.</li><li>Kontrollera även att ett uppdateringsschema (Schedule) är konfigurerat så att en fullständig uppdatering av Collectionen genomförs med jämna mellanrum.</li></ul>",
-    "<p>Om både inkrementella uppdateringar och ett uppdateringsschema är aktiverade kommer Collectionen automatiskt att hållas uppdaterad med nya eller förändrade objekt som uppfyller medlemskapsreglerna. Detta minskar behovet av manuella uppdateringar och säkerställer att Collectionens innehåll är aktuellt.</p>",
-    "<figure class=\"figure\"><img src=\"media/bild03.png\" alt=\"\" loading=\"lazy\"></figure>",
-    "<p>Kontrollera vilka utrullningar som finns tilldelad okända datorer</p>",
-    "<p>För att kontrollera vilka utrullningar (deployments) som är kopplade till en Collection markerar du samlingen All Unknown Computers och väljer fliken eller alternativet Deployments. Där visas samtliga deploymenter som är riktade mot den valda Collectionen.</p>",
-    "<p>I mitt fall finns det två olika deploymenter som är kopplade till All Unknown Computers. Detta innebär att datorer som ännu inte är registrerade i Configuration Manager kan få tillgång till dessa utrullningar vid exempelvis en PXE-start. Genom att granska deploymenterna kan man se vilka Task Sequences eller applikationer som är tillgängliga för okända datorer och därmed styra vilka installationer som kan genomföras.</p>",
-    "<figure class=\"figure\"><img src=\"media/bild04.png\" alt=\"\" loading=\"lazy\"></figure>",
-    "<p>Skapa en direktregel</p>",
-    "<p>Direktregel (Direct Rule) är den enklaste typen av medlemskapsregel som kan skapas i en Collection. Den används när endast ett fåtal objekt ska läggas till manuellt eller när medlemskapet inte förväntas ändras över tid. Eftersom objekten läggs till manuellt är detta en statisk regel och Collectionen uppdateras inte automatiskt med nya objekt.</p>",
-    "<ul><li>Gå till Assets and Compliance → Device Collections.</li><li>Högerklicka på en tom yta och välj Create Device Collection.</li><li>Ange ett namn för Collectionen och välj en Limiting Collection, det vill säga den samling som bestämmer vilka objekt sökningen ska utgå från. I detta exempel används All Systems.</li><li>Klicka på Next &gt;.</li><li>På sidan Membership Rules väljer du Add Rule → Direct Rule.</li></ul>",
-    "<figure class=\"figure\"><img src=\"media/bild05.png\" alt=\"\" loading=\"lazy\"></figure>",
-    "<p>Ett nytt fönster öppnas.</p>",
-    "<ul><li>Klicka på Next &gt;.</li><li>Ange CM i sökfältet längst ned och klicka på Next &gt;.</li><li>Om en dator med namnet CM hittas visas den i resultatlistan.</li><li>Markera datorn CM och klicka på Next &gt; tills guiden är slutförd.</li></ul>",
-    "<p>När guiden stängs ska datorn CM visas i listan över medlemsregler för Collectionen.</p>",
-    "<ul><li>Klicka på Next &gt; genom resterande steg i guiden och välj Close eller Finish för att skapa Collectionen.</li></ul>",
-    "<p>Lägg till objekt i Collection</p>",
-    "<p>Det är viktigt att förstå att en Direct Rule är statisk och endast innehåller de objekt som valdes när regeln skapades. Om du vill lägga till ytterligare datorer kan du inte redigera den befintliga Direct Rule för att utöka sökningen. I stället behöver du skapa en ny Direct Rule i samma Collection. En Collection kan däremot innehålla flera medlemskapsregler samtidigt.</p>",
-    "<ul><li>Högerklicka på den Collection som skapades tidigare.</li><li>Välj Properties och gå till fliken Membership Rules.</li><li>Klicka på Add Rule → Direct Rule.</li></ul>",
-    "<p>Ett nytt fönster öppnas.</p>",
-    "<ul><li>Klicka på Next &gt;.</li><li>I sökfältet anger du % för att visa alla tillgängliga datorobjekt.</li><li>Klicka på Next &gt;.</li></ul>",
-    "<p>En lista med tillgängliga datorer visas.</p>",
-    "<ul><li>Markera klientdatorn. Den har vanligtvis ett genererat datornamn från Microsoft eller operativsysteminstallationen.</li><li>Klicka på Next &gt; tills guiden är slutförd.</li></ul>",
-    "<figure class=\"figure\"><img src=\"media/bild06.png\" alt=\"\" loading=\"lazy\"></figure>",
-    "<p>När guiden är klar återgår du till Collectionens medlemsregler.</p>",
-    "<ul><li>Kontrollera att både den tidigare datorn och klientdatorn nu visas i listan över medlemskapsregler.</li><li>Klicka på Next &gt; och sedan Finish för att spara ändringarna.</li></ul>",
-    "<p>Exkludera objekt</p>",
-    "<p>Nu ska du exkludera en fördefinierad Collection, nämligen All Desktop and Server Clients. Detta innebär att alla datorer som är medlemmar i den Collectionen automatiskt exkluderas från din egen Collection. Innan du lägger till exkluderingen bör du kontrollera vilka datorer som redan ingår i All Desktop and Server Clients.</p>",
-    "<p>Lägg till en exkluderingsregel</p>",
-    "<ul><li>Öppna egenskaperna för den Collection som skapades tidigare, exempelvis simpleCollection.</li><li>Gå till fliken Membership Rules.</li><li>Klicka på Add Rule och välj Exclude Collection.</li></ul>",
-    "<p>Ett nytt fönster öppnas.</p>",
-    "<ul><li>Välj Collectionen All Desktop and Server Clients.</li><li>Här kan du även se hur många objekt som för närvarande ingår i Collectionen.</li><li>Klicka på OK för att lägga till exkluderingen.</li><li>Klicka på OK igen för att spara ändringen.</li></ul>",
-    "<p>Kontrollera resultatet</p>",
-    "<ul><li>Öppna därefter simpleCollection.</li><li>Granska vilka datorer som fortfarande är medlemmar i Collectionen.</li></ul>",
-    "<aside class=\"note\"><p>Obs! En Exclude Collection Rule används för att undanta objekt som annars skulle uppfylla Collectionens medlemskapsregler. Om en dator finns både i den ursprungliga Collectionen och i en exkluderad Collection kommer exkluderingen att ha företräde. Detta är användbart när man vill skapa mer precisa samlingar utan att behöva ändra de grundläggande medlemskapsreglerna.</p></aside>",
-    "<p>Exempelvis kan man skapa en Collection som innehåller alla datorer i organisationen, men samtidigt exkludera samtliga datorer som redan finns i All Desktop and Server Clients. På så sätt kan man enkelt avgränsa vilka enheter som ska omfattas av en viss deployment eller konfiguration.</p>",
-    "<p>Skapa en frågeregel</p>",
-    "<p>Nu ska en Query Rule skapas. Till skillnad från en Direct Rule bygger den på en databasfråga (query), vilket innebär att medlemskapet kan uppdateras automatiskt när nya objekt uppfyller de angivna villkoren.</p>",
-    "<ul><li>Skapa en ny Device Collection och ge den exempelvis namnet QueryRule.</li><li>Välj All Systems som Limiting Collection.</li><li>Klicka på Next &gt;.</li><li>På sidan Membership Rules väljer du Add Rule → Query Rule.</li></ul>",
-    "<p>Ett nytt fönster öppnas.</p>",
-    "<ul><li>Ange namnet QueryRule för regeln.</li><li>Klicka på Edit Query Statement om du vill granska eller anpassa frågan.</li></ul>",
-    "<p>Granska frågan</p>",
-    "<ul><li>Notera att Query Statement redan är ifylld.</li><li>Frågan är konfigurerad för att hämta objekt från den valda Limiting Collection, det vill säga All Systems.</li><li>Om inga ytterligare filter ska användas kan du klicka på OK direkt.</li></ul>",
-    "<p>Aktivera automatisk uppdatering</p>",
-    "<p>Det är en god idé att låta Collectionen uppdateras automatiskt.</p>",
-    "<ul><li>Markera alternativet Use incremental updates for this Collection.</li><li>Detta gör att Collectionen löpande uppdateras när nya objekt läggs till eller ändras i Configuration Manager.</li><li>Klicka på Next &gt; genom resterande steg i guiden.</li><li>Avsluta genom att välja Close eller Finish.</li></ul>",
-    "<p>Uppdatera Collectionen manuellt</p>",
-    "<p>För att Collectionen ska uppdateras direkt utan att invänta nästa schemalagda uppdatering kan du:</p>",
-    "<ul><li>Högerklicka på Collectionen QueryRule.</li><li>Välja Update Membership.</li></ul>",
-    "<p>Configuration Manager genomför då omedelbart en utvärdering av medlemskapsreglerna.</p>",
-    "<p>Resultat</p>",
-    "<p>När uppdateringen är klar ska Collectionen innehålla samma datorobjekt som finns i All Systems, eftersom frågan hämtar samtliga objekt inom den valda limiting Collectionen.</p>",
-    "<p>Hämta in alla domänadministratörer till Configuration Manager</p>",
-    "<p>Som du kan läsa krävs det att en Active Directory Group Discovery har genomförts innan grupper kan användas i sökfrågor. Anledningen är att det är denna upptäckt som hämtar gruppinformationen från Active Directory till Configuration Managers databas. Utan denna information går det inte att söka efter gruppmedlemskap.</p>",
-    "<p>Därför behöver Active Directory Group Discovery konfigureras mot containern eller organisationsenheten där grupperna finns, exempelvis Users.</p>",
-    "<p>Skapa en Collection baserad på gruppmedlemskap</p>",
-    "<ul><li>Navigera till User Collections och skapa en ny Collection med namnet DomainAdmins.</li><li>Skapa därefter en ny Query Rule och ge den samma namn.</li><li>Klicka på Edit Query Statement.</li><li>I det nya fönstret väljer du Criteria och klickar sedan på stjärnikonen för att lägga till ett villkor.</li><li>I det nya fönstret klickar du på Select.</li><li>Under Attribute class väljer du User Resource.</li><li>Under Attribute väljer du User Group Name.</li><li>Klicka därefter på OK.</li><li>När du är tillbaka i fönstret Criteria Properties anger du vilket värde som ska sökas efter genom att klicka på Value.</li><li>Leta upp och välj hkr\\Domain Admins.</li><li>Om gruppen inte visas i listan har sannolikt Active Directory Group Discovery inte körts eller inte konfigurerats korrekt.</li><li>Klicka på OK och därefter OK igen tills du kommer tillbaka till fönstret Query Statement Properties.</li></ul>",
-    "<p>Testa sökfrågan</p>",
-    "<p>Innan Collectionen skapas bör du kontrollera att sökningen fungerar.</p>",
-    "<ul><li>Klicka på Play-knappen (Show Query Language Results eller Query Results Preview).</li><li>Ett nytt fönster öppnas.</li><li>Klicka på Run för att köra sökningen.</li></ul>",
-    "<figure class=\"figure\"><img src=\"media/bild07.png\" alt=\"\" loading=\"lazy\"></figure>",
-    "<p>Sökningen bör nu hitta minst en användare som är medlem i gruppen Domain Admins.</p>",
-    "<ul><li>Om sökningen returnerar resultat fungerar frågan som avsett.</li><li>Klicka på Close för att stänga fönstret Query Result Preview.</li></ul>",
-    "<p>Slutför Collectionen</p>",
-    "<ul><li>Gå tillbaka till fönstret Membership Rules.</li><li>Klicka på Summary och därefter Close för att slutföra skapandet av Collectionen.</li></ul>",
-    "<p>Verifiera resultatet</p>",
-    "<ul><li>Öppna den nya Collectionen DomainAdmins.</li><li>Kontrollera att samma användare visas i Collectionen som hittades i testkörningen av sökfrågan.</li><li>Om antalet användare stämmer överens vet du att Collectionen fungerar korrekt och uppdateras utifrån gruppmedlemskapet i Active Directory.</li></ul>",
-    "<p>Skapa frågeregel som hämtar in från ett OU</p>",
-    "<aside class=\"note\"><p>Notera att sökningen görs mot objekt som redan finns registrerade i Configuration Managers databas. Därför måste en inledande Discovery ha genomförts för de användare eller datorer som finns i de OU:er som du vill använda.</p></aside>",
-    "<aside class=\"note\"><p>Observera också att samma metod kan användas för både användare och datorer. I detta exempel kommer vi att skapa en sökning baserad på användare.</p></aside>",
-    "<ul><li>Skapa en ny Collection och öppna fönstret Query Statement Properties.</li><li>Under Attribute Class väljer du User Resource.</li><li>Under Attribute väljer du User OU Name.</li><li>Klicka därefter på Value och välj det OU vars användare du vill inkludera i sökningen.</li><li>Slutför konfigurationen genom att klicka på OK i samtliga öppna fönster.</li></ul>",
-    "<p>Verifiera resultatet</p>",
-    "<ul><li>Öppna den nya Collectionen.</li><li>Kontrollera att de användare som finns i det valda OU:t har lagts till i Collectionen.</li><li>Jämför gärna resultatet med innehållet i Active Directory för att säkerställa att sökningen fungerar som avsett.</li></ul>",
-    "<aside class=\"note\"><p>Obs! Denna metod är användbar när du vill skapa Collections baserade på organisationsstruktur i Active Directory, exempelvis för att tilldela programvara eller inställningar till alla användare inom en specifik organisationsenhet.</p></aside>"
+    "<p>I denna laboration förekommer det sex G-uppgifter och fyra VG-uppgifter som ska besvaras. Samtliga frågor finns samlade i slutet av laborationen.</p>"
    ],
    "parts": []
+  },
+  {
+   "id": "guide",
+   "group": true,
+   "title": "Konfigurationsmoment",
+   "intro": [],
+   "parts": [
+    {
+     "id": "genomforande",
+     "title": "Genomförande",
+     "intro": [],
+     "groups": [
+      {
+       "heading": "Navigera till Assets and Compliance",
+       "steps": [
+        {
+         "id": "genomforande-9157db",
+         "html": "<p>För att navigera till användarsamlingarna går du till:  Assets and Compliance → Overview → User Collections.</p>\n<figure class=\"figure\"><img src=\"media/bild01.png\" alt=\"\" loading=\"lazy\"></figure>\n<aside class=\"note\"><p>Notera att det redan finns fördefinierade Collections som kan användas. Som är till för att fånga upp både grupper och användare.</p></aside>"
+        }
+       ],
+       "lead": [
+        "<p>Collections fungerar som grupper av objekt i Configuration Manager och baseras på databasfrågor (queries) som avgör vilka objekt som ska inkluderas. En User Collection används för att samla användarobjekt och kan endast innehålla användarkonton.</p>"
+       ]
+      },
+      {
+       "heading": "Lokalisera All Systems",
+       "steps": [
+        {
+         "id": "genomforande-532762",
+         "html": "<p>Stanna kvar under Assets and Compliance och välj Device Collections.</p>\n"
+        },
+        {
+         "id": "genomforande-bbff61",
+         "html": "<p>Studera de olika Collections som redan finns skapade i miljön.</p>\n"
+        },
+        {
+         "id": "genomforande-b5eb97",
+         "html": "<p>Notera att alla upptäckta datorer som standard återfinns i samlingen All Systems.</p>\n<figure class=\"figure\"><img src=\"media/bild02.png\" alt=\"\" loading=\"lazy\"></figure>\n<p>För mer information om de olika typerna av Collections och hur de används i Configuration Manager, se följande länk: https://learn.microsoft.com/en-us/mem/configmgr/core/clients/manage/Collections/introduction-to-Collections</p>"
+        }
+       ],
+       "lead": [
+        "<p>Här finns också flera andra fördefinierade Collections. Dessa används för att organisera och hantera datorer utifrån olika kriterier och kan delas in i flera kategorier beroende på syfte och konfiguration. Samlingen All Systems innehåller samtliga datorobjekt som har upptäckts och registrerats i Configuration Manager.</p>"
+       ]
+      },
+      {
+       "heading": "Automatiskt uppdaterad Collection",
+       "steps": [
+        {
+         "id": "genomforande-34a6bc",
+         "html": "<p>Gå till fliken Membership Rules.</p>\n"
+        },
+        {
+         "id": "genomforande-d65e2d",
+         "html": "<p>Kontrollera att alternativet Use incremental updates for this Collection är markerat. Detta innebär att Collectionen uppdateras löpande när förändringar upptäcks i databasen.</p>\n"
+        },
+        {
+         "id": "genomforande-c402a4",
+         "html": "<p>Kontrollera även att ett uppdateringsschema (Schedule) är konfigurerat så att en fullständig uppdatering av Collectionen genomförs med jämna mellanrum.</p>\n<p>Om både inkrementella uppdateringar och ett uppdateringsschema är aktiverade kommer Collectionen automatiskt att hållas uppdaterad med nya eller förändrade objekt som uppfyller medlemskapsreglerna. Detta minskar behovet av manuella uppdateringar och säkerställer att Collectionens innehåll är aktuellt.</p>\n<figure class=\"figure\"><img src=\"media/bild03.png\" alt=\"\" loading=\"lazy\"></figure>"
+        }
+       ],
+       "lead": [
+        "<p>För att kontrollera om en Collection uppdateras automatiskt behöver du öppna dess egenskaper och granska medlemskapsinställningarna.</p>",
+        "<p>Högerklicka på den aktuella Collection och välj Properties.</p>"
+       ],
+       "tail": [
+        "<h4>Kontrollera vilka utrullningar som finns tilldelad okända datorer</h4>",
+        "<p>För att kontrollera vilka utrullningar (deployments) som är kopplade till en Collection markerar du samlingen All Unknown Computers och väljer fliken eller alternativet Deployments. Där visas samtliga deploymenter som är riktade mot den valda Collectionen.</p>",
+        "<p>I mitt fall finns det två olika deploymenter som är kopplade till All Unknown Computers. Detta innebär att datorer som ännu inte är registrerade i Configuration Manager kan få tillgång till dessa utrullningar vid exempelvis en PXE-start. Genom att granska deploymenterna kan man se vilka Task Sequences eller applikationer som är tillgängliga för okända datorer och därmed styra vilka installationer som kan genomföras.</p>",
+        "<figure class=\"figure\"><img src=\"media/bild04.png\" alt=\"\" loading=\"lazy\"></figure>"
+       ]
+      },
+      {
+       "heading": "Skapa en direktregel",
+       "steps": [
+        {
+         "id": "genomforande-50e035",
+         "html": "<p>Gå till Assets and Compliance → Device Collections.</p>\n"
+        },
+        {
+         "id": "genomforande-b4e043",
+         "html": "<p>Högerklicka på en tom yta och välj Create Device Collection.</p>\n"
+        },
+        {
+         "id": "genomforande-70054b",
+         "html": "<p>Ange ett namn för Collectionen och välj en Limiting Collection, det vill säga den samling som bestämmer vilka objekt sökningen ska utgå från. I detta exempel används All Systems.</p>\n"
+        },
+        {
+         "id": "genomforande-7513bd",
+         "html": "<p>Klicka på Next &gt;.</p>\n"
+        },
+        {
+         "id": "genomforande-f49ed5",
+         "html": "<p>På sidan Membership Rules väljer du Add Rule → Direct Rule.</p>\n<figure class=\"figure\"><img src=\"media/bild05.png\" alt=\"\" loading=\"lazy\"></figure>\n<p>Ett nytt fönster öppnas.</p>"
+        },
+        {
+         "id": "genomforande-7513bd-2",
+         "html": "<p>Klicka på Next &gt;.</p>\n"
+        },
+        {
+         "id": "genomforande-0887a2",
+         "html": "<p>Ange CM i sökfältet längst ned och klicka på Next &gt;.</p>\n"
+        },
+        {
+         "id": "genomforande-45aa1a",
+         "html": "<p>Om en dator med namnet CM hittas visas den i resultatlistan.</p>\n"
+        },
+        {
+         "id": "genomforande-544872",
+         "html": "<p>Markera datorn CM och klicka på Next &gt; tills guiden är slutförd.</p>\n<p>När guiden stängs ska datorn CM visas i listan över medlemsregler för Collectionen.</p>"
+        },
+        {
+         "id": "genomforande-bc17cd",
+         "html": "<p>Klicka på Next &gt; genom resterande steg i guiden och välj Close eller Finish för att skapa Collectionen.</p>\n"
+        }
+       ],
+       "lead": [
+        "<p>Direktregel (Direct Rule) är den enklaste typen av medlemskapsregel som kan skapas i en Collection. Den används när endast ett fåtal objekt ska läggas till manuellt eller när medlemskapet inte förväntas ändras över tid. Eftersom objekten läggs till manuellt är detta en statisk regel och Collectionen uppdateras inte automatiskt med nya objekt.</p>"
+       ]
+      },
+      {
+       "heading": "Lägg till objekt i Collection",
+       "steps": [
+        {
+         "id": "genomforande-45e7b2",
+         "html": "<p>Högerklicka på den Collection som skapades tidigare.</p>\n"
+        },
+        {
+         "id": "genomforande-87baca",
+         "html": "<p>Välj Properties och gå till fliken Membership Rules.</p>\n"
+        },
+        {
+         "id": "genomforande-fbb5a0",
+         "html": "<p>Klicka på Add Rule → Direct Rule.</p>\n<p>Ett nytt fönster öppnas.</p>"
+        },
+        {
+         "id": "genomforande-7513bd-3",
+         "html": "<p>Klicka på Next &gt;.</p>\n"
+        },
+        {
+         "id": "genomforande-fc8989",
+         "html": "<p>I sökfältet anger du % för att visa alla tillgängliga datorobjekt.</p>\n"
+        },
+        {
+         "id": "genomforande-7513bd-4",
+         "html": "<p>Klicka på Next &gt;.</p>\n<p>En lista med tillgängliga datorer visas.</p>"
+        },
+        {
+         "id": "genomforande-406306",
+         "html": "<p>Markera klientdatorn. Den har vanligtvis ett genererat datornamn från Microsoft eller operativsysteminstallationen.</p>\n"
+        },
+        {
+         "id": "genomforande-615e87",
+         "html": "<p>Klicka på Next &gt; tills guiden är slutförd.</p>\n<figure class=\"figure\"><img src=\"media/bild06.png\" alt=\"\" loading=\"lazy\"></figure>\n<p>När guiden är klar återgår du till Collectionens medlemsregler.</p>"
+        },
+        {
+         "id": "genomforande-49de2c",
+         "html": "<p>Kontrollera att både den tidigare datorn och klientdatorn nu visas i listan över medlemskapsregler.</p>\n"
+        },
+        {
+         "id": "genomforande-e6268a",
+         "html": "<p>Klicka på Next &gt; och sedan Finish för att spara ändringarna.</p>\n"
+        }
+       ],
+       "lead": [
+        "<p>Det är viktigt att förstå att en Direct Rule är statisk och endast innehåller de objekt som valdes när regeln skapades. Om du vill lägga till ytterligare datorer kan du inte redigera den befintliga Direct Rule för att utöka sökningen. I stället behöver du skapa en ny Direct Rule i samma Collection. En Collection kan däremot innehålla flera medlemskapsregler samtidigt.</p>"
+       ],
+       "tail": [
+        "<h4>Exkludera objekt</h4>",
+        "<p>Nu ska du exkludera en fördefinierad Collection, nämligen All Desktop and Server Clients. Detta innebär att alla datorer som är medlemmar i den Collectionen automatiskt exkluderas från din egen Collection. Innan du lägger till exkluderingen bör du kontrollera vilka datorer som redan ingår i All Desktop and Server Clients.</p>"
+       ]
+      },
+      {
+       "heading": "Lägg till en exkluderingsregel",
+       "steps": [
+        {
+         "id": "genomforande-3d7be2",
+         "html": "<p>Öppna egenskaperna för den Collection som skapades tidigare, exempelvis simpleCollection.</p>\n"
+        },
+        {
+         "id": "genomforande-34a6bc-2",
+         "html": "<p>Gå till fliken Membership Rules.</p>\n"
+        },
+        {
+         "id": "genomforande-00cdf8",
+         "html": "<p>Klicka på Add Rule och välj Exclude Collection.</p>\n<p>Ett nytt fönster öppnas.</p>"
+        },
+        {
+         "id": "genomforande-922974",
+         "html": "<p>Välj Collectionen All Desktop and Server Clients.</p>\n"
+        },
+        {
+         "id": "genomforande-b118da",
+         "html": "<p>Här kan du även se hur många objekt som för närvarande ingår i Collectionen.</p>\n"
+        },
+        {
+         "id": "genomforande-3908b1",
+         "html": "<p>Klicka på OK för att lägga till exkluderingen.</p>\n"
+        },
+        {
+         "id": "genomforande-7c7223",
+         "html": "<p>Klicka på OK igen för att spara ändringen.</p>\n"
+        }
+       ],
+       "lead": []
+      },
+      {
+       "heading": "Kontrollera resultatet",
+       "steps": [
+        {
+         "id": "genomforande-c843f7",
+         "html": "<p>Öppna därefter simpleCollection.</p>\n"
+        },
+        {
+         "id": "genomforande-104940",
+         "html": "<p>Granska vilka datorer som fortfarande är medlemmar i Collectionen.</p>\n<aside class=\"note\"><p>Obs! En Exclude Collection Rule används för att undanta objekt som annars skulle uppfylla Collectionens medlemskapsregler. Om en dator finns både i den ursprungliga Collectionen och i en exkluderad Collection kommer exkluderingen att ha företräde. Detta är användbart när man vill skapa mer precisa samlingar utan att behöva ändra de grundläggande medlemskapsreglerna.</p></aside>\n<p>Exempelvis kan man skapa en Collection som innehåller alla datorer i organisationen, men samtidigt exkludera samtliga datorer som redan finns i All Desktop and Server Clients. På så sätt kan man enkelt avgränsa vilka enheter som ska omfattas av en viss deployment eller konfiguration.</p>"
+        }
+       ],
+       "lead": []
+      },
+      {
+       "heading": "Skapa en frågeregel",
+       "steps": [
+        {
+         "id": "genomforande-0c57cb",
+         "html": "<p>Skapa en ny Device Collection och ge den exempelvis namnet QueryRule.</p>\n"
+        },
+        {
+         "id": "genomforande-b85b82",
+         "html": "<p>Välj All Systems som Limiting Collection.</p>\n"
+        },
+        {
+         "id": "genomforande-7513bd-5",
+         "html": "<p>Klicka på Next &gt;.</p>\n"
+        },
+        {
+         "id": "genomforande-baa321",
+         "html": "<p>På sidan Membership Rules väljer du Add Rule → Query Rule.</p>\n<p>Ett nytt fönster öppnas.</p>"
+        },
+        {
+         "id": "genomforande-42235b",
+         "html": "<p>Ange namnet QueryRule för regeln.</p>\n"
+        },
+        {
+         "id": "genomforande-b55804",
+         "html": "<p>Klicka på Edit Query Statement om du vill granska eller anpassa frågan.</p>\n"
+        }
+       ],
+       "lead": [
+        "<p>Nu ska en Query Rule skapas. Till skillnad från en Direct Rule bygger den på en databasfråga (query), vilket innebär att medlemskapet kan uppdateras automatiskt när nya objekt uppfyller de angivna villkoren.</p>"
+       ]
+      },
+      {
+       "heading": "Granska frågan",
+       "steps": [
+        {
+         "id": "genomforande-b4e3df",
+         "html": "<p>Notera att Query Statement redan är ifylld.</p>\n"
+        },
+        {
+         "id": "genomforande-86ec3c",
+         "html": "<p>Frågan är konfigurerad för att hämta objekt från den valda Limiting Collection, det vill säga All Systems.</p>\n"
+        },
+        {
+         "id": "genomforande-9ae28c",
+         "html": "<p>Om inga ytterligare filter ska användas kan du klicka på OK direkt.</p>\n"
+        }
+       ],
+       "lead": []
+      },
+      {
+       "heading": "Aktivera automatisk uppdatering",
+       "steps": [
+        {
+         "id": "genomforande-9326bb",
+         "html": "<p>Markera alternativet Use incremental updates for this Collection.</p>\n"
+        },
+        {
+         "id": "genomforande-d3c4cc",
+         "html": "<p>Detta gör att Collectionen löpande uppdateras när nya objekt läggs till eller ändras i Configuration Manager.</p>\n"
+        },
+        {
+         "id": "genomforande-fadc15",
+         "html": "<p>Klicka på Next &gt; genom resterande steg i guiden.</p>\n"
+        },
+        {
+         "id": "genomforande-f0da86",
+         "html": "<p>Avsluta genom att välja Close eller Finish.</p>\n"
+        }
+       ],
+       "lead": [
+        "<p>Det är en god idé att låta Collectionen uppdateras automatiskt.</p>"
+       ]
+      },
+      {
+       "heading": "Uppdatera Collectionen manuellt",
+       "steps": [
+        {
+         "id": "genomforande-c3aee6",
+         "html": "<p>Högerklicka på Collectionen QueryRule.</p>\n"
+        },
+        {
+         "id": "genomforande-aa1304",
+         "html": "<p>Välja Update Membership.</p>\n<p>Configuration Manager genomför då omedelbart en utvärdering av medlemskapsreglerna.</p>"
+        }
+       ],
+       "lead": [
+        "<p>För att Collectionen ska uppdateras direkt utan att invänta nästa schemalagda uppdatering kan du:</p>"
+       ],
+       "tail": [
+        "<h4>Resultat</h4>",
+        "<p>När uppdateringen är klar ska Collectionen innehålla samma datorobjekt som finns i All Systems, eftersom frågan hämtar samtliga objekt inom den valda limiting Collectionen.</p>",
+        "<h4>Hämta in alla domänadministratörer till Configuration Manager</h4>",
+        "<p>Som du kan läsa krävs det att en Active Directory Group Discovery har genomförts innan grupper kan användas i sökfrågor. Anledningen är att det är denna upptäckt som hämtar gruppinformationen från Active Directory till Configuration Managers databas. Utan denna information går det inte att söka efter gruppmedlemskap.</p>",
+        "<p>Därför behöver Active Directory Group Discovery konfigureras mot containern eller organisationsenheten där grupperna finns, exempelvis Users.</p>"
+       ]
+      },
+      {
+       "heading": "Skapa en Collection baserad på gruppmedlemskap",
+       "steps": [
+        {
+         "id": "genomforande-f21f24",
+         "html": "<p>Navigera till User Collections och skapa en ny Collection med namnet DomainAdmins.</p>\n"
+        },
+        {
+         "id": "genomforande-55527b",
+         "html": "<p>Skapa därefter en ny Query Rule och ge den samma namn.</p>\n"
+        },
+        {
+         "id": "genomforande-5f1746",
+         "html": "<p>Klicka på Edit Query Statement.</p>\n"
+        },
+        {
+         "id": "genomforande-b68f7c",
+         "html": "<p>I det nya fönstret väljer du Criteria och klickar sedan på stjärnikonen för att lägga till ett villkor.</p>\n"
+        },
+        {
+         "id": "genomforande-6a8ce5",
+         "html": "<p>I det nya fönstret klickar du på Select.</p>\n"
+        },
+        {
+         "id": "genomforande-7c7c1c",
+         "html": "<p>Under Attribute class väljer du User Resource.</p>\n"
+        },
+        {
+         "id": "genomforande-e261b7",
+         "html": "<p>Under Attribute väljer du User Group Name.</p>\n"
+        },
+        {
+         "id": "genomforande-21626e",
+         "html": "<p>Klicka därefter på OK.</p>\n"
+        },
+        {
+         "id": "genomforande-5ecd68",
+         "html": "<p>När du är tillbaka i fönstret Criteria Properties anger du vilket värde som ska sökas efter genom att klicka på Value.</p>\n"
+        },
+        {
+         "id": "genomforande-145fb7",
+         "html": "<p>Leta upp och välj hkr\\Domain Admins.</p>\n"
+        },
+        {
+         "id": "genomforande-bfa0e4",
+         "html": "<p>Om gruppen inte visas i listan har sannolikt Active Directory Group Discovery inte körts eller inte konfigurerats korrekt.</p>\n"
+        },
+        {
+         "id": "genomforande-f5fd8c",
+         "html": "<p>Klicka på OK och därefter OK igen tills du kommer tillbaka till fönstret Query Statement Properties.</p>\n"
+        }
+       ],
+       "lead": []
+      },
+      {
+       "heading": "Testa sökfrågan",
+       "steps": [
+        {
+         "id": "genomforande-65dc50",
+         "html": "<p>Klicka på Play-knappen (Show Query Language Results eller Query Results Preview).</p>\n"
+        },
+        {
+         "id": "genomforande-0a53aa",
+         "html": "<p>Ett nytt fönster öppnas.</p>\n"
+        },
+        {
+         "id": "genomforande-3edc9c",
+         "html": "<p>Klicka på Run för att köra sökningen.</p>\n<figure class=\"figure\"><img src=\"media/bild07.png\" alt=\"\" loading=\"lazy\"></figure>\n<p>Sökningen bör nu hitta minst en användare som är medlem i gruppen Domain Admins.</p>"
+        },
+        {
+         "id": "genomforande-2172ee",
+         "html": "<p>Om sökningen returnerar resultat fungerar frågan som avsett.</p>\n"
+        },
+        {
+         "id": "genomforande-69b087",
+         "html": "<p>Klicka på Close för att stänga fönstret Query Result Preview.</p>\n"
+        }
+       ],
+       "lead": [
+        "<p>Innan Collectionen skapas bör du kontrollera att sökningen fungerar.</p>"
+       ]
+      },
+      {
+       "heading": "Slutför Collectionen",
+       "steps": [
+        {
+         "id": "genomforande-f69ec4",
+         "html": "<p>Gå tillbaka till fönstret Membership Rules.</p>\n"
+        },
+        {
+         "id": "genomforande-5e98b1",
+         "html": "<p>Klicka på Summary och därefter Close för att slutföra skapandet av Collectionen.</p>\n"
+        }
+       ],
+       "lead": []
+      },
+      {
+       "heading": "Verifiera resultatet",
+       "steps": [
+        {
+         "id": "genomforande-e3ad1c",
+         "html": "<p>Öppna den nya Collectionen DomainAdmins.</p>\n"
+        },
+        {
+         "id": "genomforande-b1a9e9",
+         "html": "<p>Kontrollera att samma användare visas i Collectionen som hittades i testkörningen av sökfrågan.</p>\n"
+        },
+        {
+         "id": "genomforande-830d9a",
+         "html": "<p>Om antalet användare stämmer överens vet du att Collectionen fungerar korrekt och uppdateras utifrån gruppmedlemskapet i Active Directory.</p>\n"
+        }
+       ],
+       "lead": []
+      },
+      {
+       "heading": "Skapa frågeregel som hämtar in från ett OU",
+       "steps": [
+        {
+         "id": "genomforande-4b7be8",
+         "html": "<p>Skapa en ny Collection och öppna fönstret Query Statement Properties.</p>\n"
+        },
+        {
+         "id": "genomforande-18e281",
+         "html": "<p>Under Attribute Class väljer du User Resource.</p>\n"
+        },
+        {
+         "id": "genomforande-d5565e",
+         "html": "<p>Under Attribute väljer du User OU Name.</p>\n"
+        },
+        {
+         "id": "genomforande-c22773",
+         "html": "<p>Klicka därefter på Value och välj det OU vars användare du vill inkludera i sökningen.</p>\n"
+        },
+        {
+         "id": "genomforande-0afff0",
+         "html": "<p>Slutför konfigurationen genom att klicka på OK i samtliga öppna fönster.</p>\n"
+        }
+       ],
+       "lead": [
+        "<aside class=\"note\"><p>Notera att sökningen görs mot objekt som redan finns registrerade i Configuration Managers databas. Därför måste en inledande Discovery ha genomförts för de användare eller datorer som finns i de OU:er som du vill använda.</p></aside>",
+        "<aside class=\"note\"><p>Observera också att samma metod kan användas för både användare och datorer. I detta exempel kommer vi att skapa en sökning baserad på användare.</p></aside>"
+       ]
+      },
+      {
+       "heading": "Verifiera resultatet",
+       "steps": [
+        {
+         "id": "genomforande-224323",
+         "html": "<p>Öppna den nya Collectionen.</p>\n"
+        },
+        {
+         "id": "genomforande-517994",
+         "html": "<p>Kontrollera att de användare som finns i det valda OU:t har lagts till i Collectionen.</p>\n"
+        },
+        {
+         "id": "genomforande-23237c",
+         "html": "<p>Jämför gärna resultatet med innehållet i Active Directory för att säkerställa att sökningen fungerar som avsett.</p>\n<aside class=\"note\"><p>Obs! Denna metod är användbar när du vill skapa Collections baserade på organisationsstruktur i Active Directory, exempelvis för att tilldela programvara eller inställningar till alla användare inom en specifik organisationsenhet.</p></aside>"
+        }
+       ],
+       "lead": []
+      }
+     ]
+    }
+   ]
   },
   {
    "id": "godkant-uppgifter",

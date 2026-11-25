@@ -18,7 +18,7 @@
           body += '<li class="step" id="' + s.id + '" data-step="' + s.id + '"><button type="button" class="tick" role="checkbox" aria-checked="false" aria-label="Markera steg ' + num +
             ' som klart"></button><a class="step-num" href="#' + s.id + '">' + num + '</a><div class="step-body">' + s.html + "</div></li>\n";
         });
-        body += "</ol>\n";
+        body += "</ol>\n" + (g.tail || []).join("\n");
       });
       total += n;
       main += '<section class="part" id="' + p.id + '" data-part="' + p.id + '">\n<h3 class="part-head"><button type="button" class="part-toggle" aria-expanded="true" aria-controls="' + p.id +
